@@ -1,0 +1,296 @@
+----
+You have {1,3} Tong, x raivals need Tong,  what's the rate of any of 2 Tong exists in Paiqiang?
+KeyRivalNum PaiqiangNum RateOfOne 1.0/rate
+          3          12      0.14  7.00
+          2          12      0.20  5.00
+          1          12      0.33  3.00
+----
+You and x rivals need Tong, nobody abandon 9 Tong before,  what is the rate of DianGang when you abandon 9 Tong?
+KeyRivalNum PaiqiangNum    GangRate    PengRate
+          1          16    0.19        0.44
+          1          12    0.28        0.46
+          1           8    0.42        0.44
+          1           4    0.64        0.32
+----
+Case 1, host {1,3,7}, Paiqiang {2,5,6,6,8,9}
+Rate of receiving only 2 Tong: 0.25
+Rate of receiving 56|68|89   : 0.28
+----
+What's the rate of your rivals has X-Number pais or more from total AvailabePais?
+KeyRvial=1, PaiqiangNum=12
+PaisInRival AvailabePais    Rate
+         1             1    0.67
+         2             2    0.44
+         2             3    0.75
+         3             3    0.28
+         2             4    0.90
+         3             4    0.59
+         4             4    0.18
+----
+Assume host and one rival need Wan. 
+If 56778 Wan are unknown, what's the relative posibility the rival Hu one spcific Pai?
+If rival hu 6 Wan, then rival's pai may be {5, 7} or {7, 8}
+If rival hu 7 Wan, then rival's pai may be {5, 6} or {6, 8} or {7, 7} or {7} or {5,6,7,7} or {6,7,7,8}
+Rate of Jiao 6 Wan: 0.09
+Rate of Jiao 7 Wan: 0.16
+----
+32 pias(y pais is available) in Paiqiang,  what's the rate host  get x pais at the points where 8 pais left in Paiqiang
+Indispensable Available winner   Rate
+            3        10      0   0.26
+            4        13      0   0.16
+            5        17      0   0.12
+-
+            3        10      1   0.38
+            4        13      1   0.28
+            5        17      1   0.25
+-
+            3        10      2   0.56
+            4        13      2   0.50
+            5        17      2   0.53
+-
+----
+Index LeftRival Paiqiang Fan Type(0N, 1Z, 2D)
+    1         2       30   0 Zimo
+    2         2       26   0 Dianpao
+    3         2       20   0 Dianpao
+    4         3       26   0 Zimo
+    5         2       10   0 Dianpao
+    6         2       21   0 Dianpao
+    7         2       12   0 Zimo
+    8         1       10   1 Dianpao
+    9         1        1   0 Dianpao
+   10         0        0   2 NotHupai
+   11         0        0   2 NotHupai
+   12         1       20   0 Dianpao
+   13         3        6   0 Dianpao
+   14         1        1   0 Dianpao
+   15         1       19   0 Zimo
+   16         1       18   0 Dianpao
+   17         2       29   1 Zimo
+   18         0        0   1 NotHupai
+   19         0        0   0 NotHupai
+   20         1       28   0 Zimo
+   21         1        3   1 Zimo
+   22         3       18   0 Zimo
+   23         1       37   3 Dianpao
+   24         1        7   1 Zimo
+   25         2       20   0 Dianpao
+   26         2       16   2 Dianpao
+   27         3       23   1 Zimo
+   28         2       32   0 Zimo
+   29         0        0   4 NotHupai
+   30         0        0   3 NotHupai
+   31         3       26   0 Zimo
+   32         1       10   2 Zimo
+   33         3       26   1 Zimo
+   34         0       15   3 NotHupai
+   35         3       18   0 Dianpao
+   36         1        5   0 Zimo
+   37         3       25   2 Zimo
+   38         2       17   1 Dianpao
+   39         1        7   0 Dianpao
+   40         2        8   1 Zimo
+   41         2       11   1 Zimo
+   42         0        0   1 NotHupai
+   43         1       21   0 Dianpao
+   44         1       10   0 Dianpao
+   45         1        5   1 Dianpao
+   46         3       21   0 Dianpao
+   47         1        5   1 Zimo
+   48         3       35   0 Zimo
+   49         2        5   0 Zimo
+   50         0        8   2 NotHupai
+   51         3       31   0 Dianpao
+   52         1        2   2 Zimo
+   53         0        5   2 NotHupai
+   54         2       30   0 Dianpao
+   55         0        7   0 NotHupai
+   56         2        3   1 Zimo
+   57         3       28   1 Zimo
+   58         0        3   0 NotHupai
+   59         0       18   1 NotHupai
+   60         1       27   0 Dianpao
+   61         3       35   3 Dianpao
+   62         3        7   0 Zimo
+   63         0        2   0 NotHupai
+   64         3       18   3 Zimo
+   65         0        0   1 NotHupai
+   66         2        9   0 Dianpao
+   67         2       11   1 Zimo
+   68         1        7   2 Dianpao
+   69         3       15   3 Zimo
+   70         2       26   0 Zimo
+   71         2        6   0 Dianpao
+   72         0        3   0 NotHupai
+   73         1       23   1 Dianpao
+   74         1       21   2 Zimo
+   75         3       42   0 Zimo
+   76         2        0   0 NotHupai
+   77         3       17   1 Dianpao
+   78         2        5   1 Dianpao
+   79         3       25   3 Dianpao
+   80         3        7   0 Dianpao
+   81         1       20   0 Dianpao
+   82         0        0   3 NotHupai
+   83         0        0   3 NotHupai
+   84         2       18   0 Dianpao
+   85         0       13   0 NotHupai
+   86         1        7   3 Dianpao
+   87         2        6   1 Dianpao
+   88         0       13   2 NotHupai
+   89         3       15   0 Dianpao
+   90         0        0   1 NotHupai
+   91         0        0   0 NotHupai
+   92         3       29   0 Dianpao
+   93         2       10   0 Zimo
+   94         2        6   3 Dianpao
+   95         1        0   1 Zimo
+   96         3       26   0 Dianpao
+   97         2        0   1 Dianpao
+   98         3       18   0 Zimo
+   99         3       22   0 Dianpao
+  100         3       20   0 Dianpao
+  101         2       12   2 Zimo
+  102         0       15   0 NotHupai
+  103         2       25   1 Zimo
+  104         3       16   0 Dianpao
+  105         0        0   3 NotHupai
+  106         0       11   0 NotHupai
+  107         0        0   3 NotHupai
+  108         2       20   0 Dianpao
+  109         3       18   0 Zimo
+  110         1       19   0 Dianpao
+If host didn't Hupai in area [begin, end), how much host will lost?
+[begin  0, end 32), lost = 43.64
+[begin  4, end 32), lost = 39.00
+[begin  8, end 32), lost = 29.68
+----
+Zimo rate, if nobody else Hu before you (no Jiao).
+1 - (3/4)**1 = 0.25
+1 - (3/4)**2 = 0.44
+1 - (3/4)**3 = 0.58
+1 - (3/4)**4 = 0.68
+1 - (2/3)**1 = 0.33
+1 - (2/3)**2 = 0.56
+1 - (2/3)**3 = 0.70
+1 - (2/3)**4 = 0.80
+----
+How many pais you should abandon for jiao? 
+Note: We start to count 1 when you abadon one Tong or Tiao and you need Tong and Tiao,  And once we started the count, every Pais is counted, that is Wan is counted in. 
+The abandoned Pais are:3.63
+----
+  0,   0,   0
+  2,   0,   0
+  2,   0,   0
+  4,   3,   0
+  6,   2,   0
+  7,   0,   0
+ 10,   8,   0
+ 13,   1,   0
+ 14,   0,   0
+ 14,   6,   4
+ 15,   4,   1
+ 15,  13,  12
+ 16,  12,  10
+ 16,  14,  10
+ 17,   1,   0
+ 17,  12,  11
+ 19,  17,   4
+ 20,  13,   4
+ 20,  15,  14
+ 21,   1,   0
+ 21,  15,   3
+ 22,   7,   1
+ 23,   0,   0
+ 23,   5,   0
+ 23,  10,   8
+ 24,   0,   0
+ 24,  14,  13
+ 24,  16,  16
+ 24,  18,   0
+ 27,  13,   0
+ 28,   8,   7
+ 28,  15,  14
+ 28,  17,   9
+ 29,   9,   0
+ 29,  28,  27
+ 30,  12,   8
+ 30,  18,   8
+ 31,  19,  10
+ 32,  20,   8
+ 32,  28,   6
+ 33,   3,   0
+ 34,  31,  22
+ 36,   5,   0
+ 43,  14,  11
+Average HupaiTime(When the 1st, 2nd, 3rd winner Hu):
+    1st = 21.05
+    2nd = 10.16
+    3rd = 5.48
+Dead player anylasis.(Total 44 rounds)
+    1st column zero: 1
+    2nd column zero: 7
+    3rd column zero: 19
+    4th column zero: 44,  0.67 of them are No Pai or No Jiao, when 2 player has gone and host has a definitive pai, rival's Hu rate = 0.17, host's Hu rate = 0.83
+Hupai Area Statistic:
+    Area 0  ~ 0 :  27, 0.15
+    Area 1  ~ 4 :  16, 0.09
+    Area 1  ~ 10:  37, 0.21
+    Area 11 ~ 20:  38, 0.22
+    Area 21 ~ 30:  22, 0.12
+    Area 31 ~ 54:   8, 0.05
+----
+P=3; (0.33P,0F); (1P,0F)
+Pai    Value     Value     Value     Value     Value
+       (0F)10.0  (1F)20.0  (2F)40.0  (3F)80.0 (4F)160.0
+  1     6.12     15.78     35.09     73.72    150.98 
+  2    11.74     22.99     45.48     90.47    180.44 
+  3    14.13*    26.02*    49.80*    97.36*   192.49*
+  4    15.46*    27.69*    52.16*   101.10*   198.98*
+  5    16.29*    28.74*    53.64*   103.43*   203.02*
+
+P=3; (0.33P,0F); (2P,0F)
+Pai    Value     Value     Value     Value     Value
+       (0F)10.0  (1F)20.0  (2F)40.0  (3F)80.0 (4F)160.0
+  1     3.05     11.90     29.60     65.00    135.80 
+  2     8.82     19.33     40.34     82.35    166.39 
+  3    11.58     22.84     45.35*    90.38*   180.43*
+  4    13.23*    24.93*    48.31*    95.08*   188.61*
+  5    14.34*    26.32*    50.27*    98.17*   193.98*
+
+P=3; (0.33P,0F); (1P,1F)
+Pai    Value     Value     Value     Value     Value
+       (0F)10.0  (1F)20.0  (2F)40.0  (3F)80.0 (4F)160.0
+  1     2.55     12.21     31.52     70.15    147.41 
+  2     9.41     20.66     43.15     88.13    178.11 
+  3    12.40     24.29*    48.07*    95.63*   190.76*
+  4    14.08*    26.32*    50.79*    99.73*   197.60*
+  5    15.15*    27.60*    52.50*   102.29*   201.88*
+
+P=3; (0.33P,0F); (2P,1F)
+Pai    Value     Value     Value     Value     Value
+       (0F)10.0  (1F)20.0  (2F)40.0  (3F)80.0 (4F)160.0
+  1    -1.61      7.24     24.94     60.34    131.14 
+  2     5.36     15.87     36.88     78.89    162.93 
+  3     8.84     20.09     42.61     87.63    177.68*
+  4    10.95     22.65*    46.03*    92.80*   186.33*
+  5    12.39*    24.37*    48.32*    96.22*   192.03*
+
+P=3; (0.33P,1F); (1P,0F)
+Pai    Value     Value     Value     Value     Value
+       (0F)10.0  (1F)20.0  (2F)40.0  (3F)80.0 (4F)160.0
+  1     4.11     13.77     33.08     71.71    148.97 
+  2    10.66     21.90     44.40     89.38    179.35 
+  3    13.40*    25.29*    49.07*    96.63*   191.75*
+  4    14.90*    27.14*    51.61*   100.54*   198.42*
+  5    15.85*    28.30*    53.19*   102.99*   202.57*
+
+P=3; (0.33P,1F); (2P,0F)
+Pai    Value     Value     Value     Value     Value
+       (0F)10.0  (1F)20.0  (2F)40.0  (3F)80.0 (4F)160.0
+  1     0.90      9.75     27.45     62.85    133.65 
+  2     7.66     18.16     39.17     81.19    165.23 
+  3    10.80     22.06     44.57     89.60*   179.65*
+  4    12.65*    24.34*    47.72*    94.49*   188.02*
+  5    13.87*    25.85*    49.80*    97.70*   193.51*
+
