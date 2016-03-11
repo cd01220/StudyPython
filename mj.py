@@ -155,12 +155,12 @@ def PrintRateOfAvailablePaisInPaiqiang():
     conditions = [(3, 12, 1), (2, 12, 1), (1, 12, 1)]
     print("You have {1,3} Tong, x raivals need Tong, ",
           "what's the rate of any of 2 Tong exists in Paiqiang?")
-    print("KeyRivalNum", "PaiqiangNum", "RateOfOne", "1.0/rate")
+    print("KeyRivalNum", "PaiqiangNum", "RateOfOne")
     for x,y,z in conditions:
         paisDist = PaisDistribution(y, x, z, z)
         #paisDist.Print()
         rate = 1-CalcRateOfAvailablePaisInRivals(paisDist, False, True)
-        print("{0:11d}{1:12d}{2:10.2f} {3:5.2f}".format(x, y, rate, 1.0/rate))
+        print("{0:11d}{1:12d}{2:10.2f}".format(x, y, rate))
 
 print("----")
 PrintRateOfAvailablePaisInPaiqiang()

@@ -6,11 +6,11 @@
 def FormatHexString(string):
     x = "0x" + string[0] + string[1]
     for i in range(2, len(string), 2):
-        if ((i % 16) != 0):
+        if ((i % 32) != 0):
             x = x + ", 0x" + string[i] + string[i+1]            
         else:
-            x = x + ",\r\n0x" + string[i] + string[i+1] 
+            x = x + ",\n0x" + string[i] + string[i+1] 
     print(x)
     return len(string)
 
-FormatHexString("4af01e0001c30000f000f01100010000f00b4109000301000201000101efec089c")
+FormatHexString("4af0130001c30101f000f00600010000f000d520e9f6")
