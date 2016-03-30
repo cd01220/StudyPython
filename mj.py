@@ -115,22 +115,23 @@ def CalcRateOfAvailablePaisInRivals2(paisDist, doCalculateOnlyOneRival, isExaclt
         rivalPais = paisDist.oneRivalPais
     else:
         rivalPais = paisDist.keyRivalPais
+        
+    rate = 0
     if isExacltly:
         rate1 = 1.0
         rate2 = 1.0
         superfluous = paisDist.availablePais - paisDist.indispensablePais
+        combinations = CalcCombNumber(superfluous, paisDist.availablePais)
         for i in range(1, superfluous + 1):
             rate1 *= (paisDist.effectivePais - rivalPais)/paisDist.effectivePais
             paisDist.effectivePais -= 1
-        rate1 *= CalcCombNumber(superfluous, paisDist.availablePais)
         for i in range(1, paisDist.indispensablePais + 1):
             rate2 *= rivalPais / paisDist.effectivePais
             rivalPais -= 1
-            paisDist.effectivePais      -= 1
-        #print("1:", rate1, rate2)
-        rate = rate1 * rate2
+            paisDist.effectivePais -= 1
+        rate = rate1 * rate2 * combinations
+        #print("1:", rate, rate1, rate2, combinations)
     else:
-        rate = 0
         for i in range(paisDist.indispensablePais, paisDist.availablePais + 1):
             paisDist.indispensablePais = i
             rate += CalcRateOfAvailablePaisInRivals2(paisDist, doCalculateOnlyOneRival, True)
@@ -181,10 +182,9 @@ def CalcDianGangRate(keyRivalNum, paiqiangNum):
     return rate
     
 def CalcRivalPengPaiRate(keyRivalNum, paiqiangNum):
-    condition = [(1, 16), (1, 12), (1, 8), (1, 4)]
     paisDist = PaisDistribution(paiqiangNum, keyRivalNum, 3, 2)
     #paisDist.Print()
-    rate = CalcRateOfAvailablePaisInRivals(paisDist, True, True) * keyRivalNum
+    rate = CalcRateOfAvailablePaisInRivals(paisDist, True, False) * keyRivalNum
     return rate
     
 def PrintGangAndPengRate():
@@ -218,14 +218,14 @@ PrintSelectPais()
 def PrintRateRivalGetPartOfPais():
     keyRivals = 1
     paiqiang  = 12
-    print("What's the rate of your rivals has X-Number pais or more from total AvailabePais?")
+    print("What's the rate of your rivals has X-Number pais from total AvailabePais?")
     print("KeyRvial={0}, PaiqiangNum={1}".format(keyRivals, paiqiang))
     print("PaisInRival", "AvailabePais", "   Rate")
-    conditions = [(1, 1), (2, 2), (2, 3), (3, 3), (2, 4), (3, 4), (4, 4)]
+    conditions = [(1, 1), (0, 2), (1, 2), (2, 2), (0, 3), (1, 3), (2, 3), (3, 3), (2, 4), (3, 4), (4, 4)]
     for x,y in conditions:
         paisDist = PaisDistribution(paiqiang, keyRivals, y, x)
         #paisDist.Print()
-        rate = CalcRateOfAvailablePaisInRivals(paisDist, True, False)
+        rate = CalcRateOfAvailablePaisInRivals(paisDist, True, True)
         print("{0:10d}{1:14d}{2:8.2f}".format(x, y, rate))
 
 print("----")
@@ -430,7 +430,7 @@ def PrintLostOfRivalHupai():
             print("{0:5d}".format(index), 
                   "{0:9d} {1:8d} {2:3d} {3:s}".format(leftRivals, paiqiang, fan, TypeName[type]))
             index += 1
-    area = [(0, 32), (4, 32), (8, 32)]
+    area = [(0, 32), (4, 32), (8, 32), (16, 32)]
     print("If host didn't Hupai in area [begin, end), how much host will lost?")
     for begin, end in area:
         lost = CalcLostOfRivalHupai(begin, end)

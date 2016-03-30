@@ -1,0 +1,1 @@
+FormatWords.py > result.txt

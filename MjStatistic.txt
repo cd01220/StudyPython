@@ -7,24 +7,28 @@ KeyRivalNum PaiqiangNum RateOfOne
 ----
 You and x rivals need Tong, nobody abandon 9 Tong before,  what is the rate of DianGang when you abandon 9 Tong?
 KeyRivalNum PaiqiangNum    GangRate    PengRate
-          1          16    0.19        0.44
-          1          12    0.28        0.46
-          1           8    0.42        0.44
-          1           4    0.64        0.32
+          1          16    0.19        0.64
+          1          12    0.28        0.75
+          1           8    0.42        0.86
+          1           4    0.64        0.96
 ----
 Case 1, host {1,3,7}, Paiqiang {2,5,6,6,8,9}
 Rate of receiving only 2 Tong: 0.25
 Rate of receiving 56|68|89   : 0.28
 ----
-What's the rate of your rivals has X-Number pais or more from total AvailabePais?
+What's the rate of your rivals has X-Number pais from total AvailabePais?
 KeyRvial=1, PaiqiangNum=12
 PaisInRival AvailabePais    Rate
          1             1    0.67
+         0             2    0.10
+         1             2    0.46
          2             2    0.44
-         2             3    0.75
+         0             3    0.03
+         1             3    0.22
+         2             3    0.46
          3             3    0.28
-         2             4    0.90
-         3             4    0.59
+         2             4    0.31
+         3             4    0.41
          4             4    0.18
 ----
 Assume host and one rival need Wan. 
@@ -164,6 +168,7 @@ If host didn't Hupai in area [begin, end), how much host will lost?
 [begin  0, end 32), lost = 43.64
 [begin  4, end 32), lost = 39.00
 [begin  8, end 32), lost = 29.68
+[begin 16, end 32), lost = 19.77
 ----
 Zimo rate, if nobody else Hu before you (no Jiao).
 1 - (3/4)**1 = 0.25

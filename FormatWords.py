@@ -1,4 +1,14 @@
 
+wordTypes = {
+    "adjective": "adj.", 
+    "adverb"   : "adv.", 
+    "noun"     : "n.", 
+    "pronoun"  : "pron.", 
+    "verb"     : "v."
+}
+
+ignorePatens = ["Collocations", "Extra examples", "enlarge image", "see also", "See related", "Synonyms", "Wordfinder", "Word Origin"]
+
 doIgnore = True
 type = ""
 phonetic = ""
@@ -8,29 +18,24 @@ for line in open('tmp.txt'):
     line = "".join(line.split("\n")).strip()
     if len(line.strip()) == 0:
         continue
-    
+        
+    # save word name
     if name == "":
         name = line
         continue    
         
-    if line.find("adjective") != -1:
-        type = "adj."
-        continue
-    if line.find("adverb") != -1:
-        type = "adv."
-        continue
-    if line.find("noun") != -1:
-        type = "n."
-        continue
-    if line.find("pronoun") != -1:
-        type = "pron."
-        continue
-    if line.find("verb") != -1:
-        type = "v."
+    # save word type
+    if line in wordTypes:
+        type = wordTypes[line]
         continue
 
-    if line.find("NAmE") != -1 and phonetic == "":
-        phonetic = line[line.find("/"):len(line)]
+    # save phonetic symbol
+    if "NAmE" in line and phonetic == "":
+        if "/" in line:
+            phonetic = line[line.find("/"):len(line)]
+        else:
+            # phrase, no phonetic symbol
+            phonetic = "//"
         continue
         
     if doIgnore == True:
@@ -47,6 +52,15 @@ for line in open('tmp.txt'):
             print(type, line)
         else:
             print(type, "1", line)
+        continue
+        
+    isIgnoredLine = False
+    for i in ignorePatens:
+        if i == line[0:len(i)]:
+            isIgnoredLine = True
+            break
+            
+    if isIgnoredLine:
         continue
     
     if line[0:1].isdigit():
