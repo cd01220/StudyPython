@@ -191,11 +191,12 @@ def PrintGangAndPengRate():
     condition = [(1, 16), (1, 12), (1, 8), (1, 4)]
     print("You and x rivals need Tong, nobody abandon 9 Tong before, ",
           "what is the rate of DianGang when you abandon 9 Tong?")
-    print("KeyRivalNum", "PaiqiangNum", "   GangRate", "   PengRate")
+    print("KeyRivalNum", "PaiqiangNum", "keyRivalPais", "  GangRate", "   PengRate")    
     for keyRival, paiqiang in condition:
+        paisDist = PaisDistribution(paiqiang, keyRival, 0, 0)
         rateOfGang = CalcDianGangRate(keyRival,paiqiang)
         rateOfPeng = CalcRivalPengPaiRate(keyRival,paiqiang)
-        print("{0:11d}{1:12d}{2:8.2f}{3:12.2f}".format(keyRival, paiqiang, rateOfGang, rateOfPeng))
+        print("{0:11d}{1:12d}{2:12.2f}{3:12.2f}{4:12.2f}".format(keyRival, paiqiang, paisDist.keyRivalPais, rateOfGang, rateOfPeng))
 
 print("----")
 PrintGangAndPengRate()
@@ -218,9 +219,11 @@ PrintSelectPais()
 def PrintRateRivalGetPartOfPais():
     keyRivals = 1
     paiqiang  = 12
+    paisDist = PaisDistribution(paiqiang, keyRivals, 0, 0)
     print("What's the rate of your rivals has X-Number pais from total AvailabePais?")
-    print("KeyRvial={0}, PaiqiangNum={1}".format(keyRivals, paiqiang))
+    print("KeyRvial={0}, PaiqiangNum={1}, keyRivalPais={2}".format(keyRivals, paiqiang, paisDist.keyRivalPais))
     print("PaisInRival", "AvailabePais", "   Rate")
+    
     conditions = [(1, 1), (0, 2), (1, 2), (2, 2), (0, 3), (1, 3), (2, 3), (3, 3), (2, 4), (3, 4), (4, 4)]
     for x,y in conditions:
         paisDist = PaisDistribution(paiqiang, keyRivals, y, x)
@@ -775,7 +778,7 @@ def CreateRivalList(rivalsData):
     return rivals
 
 def RivalListToString(rivals):
-    rivalsStr = "P={0}".format(len(rivals)+1)
+    rivalsStr = "Players={0}".format(len(rivals)+1)
     for rival in rivals:
         rivalsStr += "; ({0}P,{1}F)".format(rival.definitivePaiNumber, rival.fanNumber)
     return rivalsStr
@@ -802,7 +805,7 @@ def GetRivalData(x):
 
 def PrintPaiValue():
     baseRule = BaseRule()
-    rivalsInfoGrps = GetRivalData(0)
+    rivalsInfoGrps = GetRivalData(1)
     for rivalsInfo in rivalsInfoGrps:
         rivals=CreateRivalList(rivalsInfo)
         print(RivalListToString(rivals))

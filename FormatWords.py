@@ -47,7 +47,7 @@ for line in open('tmp.txt'):
     
     if firstText == "":
         firstText = line
-        print(name, phonetic)
+        print(name, phonetic, "(word building: #)")
         if line[0:1].isdigit():
             print(type, line)
         else:
