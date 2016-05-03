@@ -203,7 +203,8 @@ class MyHtmlParser(HTMLParser):
     
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')                 
 parser = MyHtmlParser()
-srcFileObj = codecs.open("source.html", "r", "utf-8")
+assert len(sys.argv) == 2
+srcFileObj = codecs.open(sys.argv[1], "r", "utf-8")
 
 for line in srcFileObj:
     parser.feed(line)
