@@ -9,7 +9,11 @@ class MyHtmlParser(HTMLParser):
         HTMLParser.__init__(self, strict=False)
         self.tagAttrs = []   #[("span", ("class", "def")]
         self.defs = []   #[("definition", (example sentence 1, example sentence 2, ...))]
-        self.EndTagHandler = {"def": self.HandleEndTagSpanClassDef, "x-g": self.HandleEndTagSpanClassXg}
+        self.EndTagHandler = \
+        {
+            ("span", ("class", "def")): self.HandleEndTagSpanClassDef, 
+            ("span", ("class", "x-g")): self.HandleEndTagSpanClassXg
+        }
         self.DataHandler = \
         {
             ("h2", ("class", "h")): self.HandleDataTagH2ClassH, 
@@ -37,12 +41,17 @@ class MyHtmlParser(HTMLParser):
             tagAttr = self.tagAttrs[i-1]
             if tagAttr[0] == "span":
                 if tagAttr[1][0] == "class":
-                    if tagAttr[1][1] in ["oldsubentry", "collapse", "un", "idm-g", "pv-gs"]:
+                    if tagAttr[1][1] in ["collapse", "un", "idm-g", "pv-gs"]:
                         areaType = tagAttr
                         break
             elif tagAttr[0] == "div":  
                 if tagAttr[1][0] == "class":
                     if tagAttr[1][1] in ["webtop-g", "top-g"]:
+                        areaType = tagAttr
+                        break
+            elif tagAttr[0] == "ol":  
+                if tagAttr[1][0] == "class":                    
+                    if tagAttr[1][1] in ["h-g"]:
                         areaType = tagAttr
                         break
         return areaType
@@ -63,14 +72,14 @@ class MyHtmlParser(HTMLParser):
     #######################end tag handler
     def HandleEndTagSpanClassDef(self):
         areaType = self.GetAreaType()
-        if areaType == ("span", ("class", "oldsubentry")):
+        if areaType == ("ol", ("class", "h-g")):
             self.defs.append(("[" + self.tmpGram + "] " + self.tmpDef, []))
         self.tmpGram = ""
         self.tmpDef = ""
         
     def HandleEndTagSpanClassXg(self):
         areaType = self.GetAreaType()
-        if areaType == ("span", ("class", "oldsubentry")):
+        if areaType == ("ol", ("class", "h-g")):
             curDef = self.defs.pop()
             curDef[1].append(self.tmpExampleSentence)
             self.defs.append(curDef)
@@ -89,7 +98,7 @@ class MyHtmlParser(HTMLParser):
         areaType = self.GetAreaType()
         if areaType == ("div", ("class", "webtop-g")):
             self.tmpPos = data
-        elif ("span", ("class", "oldsubentry")):
+        elif ("ol", ("class", "h-g")):
             self.tmpGram = data
         
     def HandleDataTagSpanClassCf(self, data):
@@ -135,9 +144,8 @@ class MyHtmlParser(HTMLParser):
             
     def handle_endtag(self, tag):    
         tagAttr = self.tagAttrs.pop()
-        if tagAttr[0] == "span" and tagAttr[1][0] == "class":
-            if tagAttr[1][1] in self.EndTagHandler:
-                self.EndTagHandler[tagAttr[1][1]]()
+        if tagAttr in self.EndTagHandler:
+            self.EndTagHandler[tagAttr]()
                 
     def handle_data(self, data):          
         if len(self.tagAttrs) == 0:
