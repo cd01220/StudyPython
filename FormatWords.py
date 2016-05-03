@@ -111,10 +111,10 @@ class MyHtmlParser(HTMLParser):
             self.tmpGram = data
         
     def HandleDataTagSpanClassCf(self, data):
-        dataTpe = self.GetDataType()
-        if dataTpe == ("span", ("class", "sn-gs")):
+        dataType = self.GetDataType()
+        if dataType == ("span", ("class", "sn-gs")):
             self.tmpDef = self.tmpDef + data + " "
-        elif dataTpe == ("span", ("class", "x-gs")):
+        elif dataType == ("span", ("class", "x-gs")):
             self.tmpExampleSentence = self.tmpExampleSentence + data + " "
                 
     def HandleDataTagSpanClassExp(self, data):
