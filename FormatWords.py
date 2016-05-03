@@ -23,6 +23,8 @@ class MyHtmlParser(HTMLParser):
             ("span", ("class", "exp")): self.HandleDataTagSpanClassExp,
             ("span", ("class", "use")): self.HandleDataTagSpanClassUse,            
             ("span", ("class", "def")): self.HandleDataTagSpanClassDef,
+            ("span", ("class", "eb")): self.HandleDataTagSpanClassEb,
+            ("span", ("class", "ndv")): self.HandleDataTagSpanClassNdv,            
             ("span", ("class", "gram")): self.HandleDataTagSpanClassGram,
             ("span", ("class", "x")): self.HandleDataTagSpanClassX,
             ("span", ("class", "gl")): self.HandleDataTagSpanClassGl,
@@ -30,7 +32,7 @@ class MyHtmlParser(HTMLParser):
         }
         #temp data
         self.tmpName = ""
-        self.tmpPhon = ""
+        self.tmpPhon = "" 
         self.tmpPos = ""   #verb, noun, ...
         self.tmpGram = ""  #transitive, intransitive, ...
         self.tmpUse = ""   #(not usually used in the progressive tenses)
@@ -48,7 +50,7 @@ class MyHtmlParser(HTMLParser):
             m = m - 1
             if subTop != totalStack[m]:
                 return False
-        excludeTag = [("span", ("class", "collapse"))]
+        excludeTag = [("span", ("class", "collapse")), ("span", ("class", "idm-gs"))]
         for i in totalStack:
             for ii in excludeTag:
                 if i == ii:
@@ -130,6 +132,23 @@ class MyHtmlParser(HTMLParser):
     def HandleDataTagSpanClassDef(self, data):      
         self.tmpDef = self.tmpDef + data
     
+    def HandleDataTagSpanClassEb(self, data):  
+        if self.CheckStack([("ol", ("class", "h-g"))]):
+            dataType = self.GetDataType()
+            if dataType == ("span", ("class", "sn-gs")):
+                self.tmpDef = self.tmpDef + data
+            elif dataType == ("span", ("class", "x-gs")):
+                self.tmpExampleSentence = self.tmpExampleSentence + data
+    
+    def HandleDataTagSpanClassNdv(self, data): 
+        if self.CheckStack([("ol", ("class", "h-g"))]):
+            dataType = self.GetDataType()
+            if dataType == ("span", ("class", "sn-gs")):
+                self.tmpDef = self.tmpDef + data
+            elif dataType == ("span", ("class", "x-gs")):
+                self.tmpExampleSentence = self.tmpExampleSentence + data
+    
+    
     def HandleDataTagSpanClassGram(self, data):
         if self.tmpGram == "":
             self.tmpGram = data
@@ -144,11 +163,12 @@ class MyHtmlParser(HTMLParser):
             self.tmpExampleSentence = self.tmpExampleSentence + "(=" + data + ")"
         
     def HandleDataTagStrongClassPseudo(self, data):
-        dataType = self.GetDataType()
-        if dataType == ("span", ("class", "sn-gs")):
-            self.tmpDef = self.tmpDef + data
-        elif dataType == ("span", ("class", "x-gs")):
-            self.tmpExampleSentence = self.tmpExampleSentence + data
+        if self.CheckStack([("ol", ("class", "h-g"))]):
+            dataType = self.GetDataType()
+            if dataType == ("span", ("class", "sn-gs")):
+                self.tmpDef = self.tmpDef + data
+            elif dataType == ("span", ("class", "x-gs")):
+                self.tmpExampleSentence = self.tmpExampleSentence + data
     
     #tag:   "span"
     #attrs: (("class", "def"), ("id", "look_1__72"), ...)
