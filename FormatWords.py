@@ -201,7 +201,7 @@ class MyHtmlParser(HTMLParser):
                 print(":", ii)
             index = index + 1
     
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')                 
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-16')                 
 parser = MyHtmlParser()
 assert len(sys.argv) == 2
 srcFileObj = codecs.open(sys.argv[1], "r", "utf-8")
