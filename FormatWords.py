@@ -21,40 +21,39 @@ class MyHtmlParser(HTMLParser):
             ("span", ("class", "pos")): self.HandleDataTagSpanClassPos,
             ("span", ("class", "cf")): self.HandleDataTagSpanClassCf, 
             ("span", ("class", "exp")): self.HandleDataTagSpanClassExp,
+            ("span", ("class", "use")): self.HandleDataTagSpanClassUse,            
             ("span", ("class", "def")): self.HandleDataTagSpanClassDef,
             ("span", ("class", "gram")): self.HandleDataTagSpanClassGram,
             ("span", ("class", "x")): self.HandleDataTagSpanClassX,
+            ("span", ("class", "gl")): self.HandleDataTagSpanClassGl,
             ("strong", ("class", "pseudo")): self.HandleDataTagStrongClassPseudo
         }
         #temp data
         self.tmpName = ""
         self.tmpPhon = ""
-        self.tmpPos = ""
-        self.tmpGram = ""
+        self.tmpPos = ""   #verb, noun, ...
+        self.tmpGram = ""  #transitive, intransitive, ...
+        self.tmpUse = ""   #(not usually used in the progressive tenses)
         self.tmpDef = ""
         self.tmpExampleSentence = ""
     
-    def GetAreaType(self):
-        areaType = ("pseudo", ("class", "pseudo"))
-        i = len(self.tagAttrs)
-        for i in range(len(self.tagAttrs), 0, -1):
-            tagAttr = self.tagAttrs[i-1]
-            if tagAttr[0] == "span":
-                if tagAttr[1][0] == "class":
-                    if tagAttr[1][1] in ["collapse", "un", "idm-g", "pv-gs"]:
-                        areaType = tagAttr
-                        break
-            elif tagAttr[0] == "div":  
-                if tagAttr[1][0] == "class":
-                    if tagAttr[1][1] in ["webtop-g", "top-g"]:
-                        areaType = tagAttr
-                        break
-            elif tagAttr[0] == "ol":  
-                if tagAttr[1][0] == "class":                    
-                    if tagAttr[1][1] in ["h-g"]:
-                        areaType = tagAttr
-                        break
-        return areaType
+    def CheckStack(self, subStack):
+        totalStack = self.tagAttrs
+        assert len(totalStack) > 0 and len(subStack) > 0
+        m = len(totalStack)
+        for subTop in subStack[::-1]:
+            for m in range(m, 0, -1):
+                if subTop == totalStack[m-1]:
+                    break
+            m = m - 1
+            if subTop != totalStack[m]:
+                return False
+        excludeTag = [("span", ("class", "collapse"))]
+        for i in totalStack:
+            for ii in excludeTag:
+                if i == ii:
+                    return False                
+        return True         
      
     #return: "definition" or "example sentence" or "" 
     def GetDataType(self):
@@ -71,15 +70,22 @@ class MyHtmlParser(HTMLParser):
      
     #######################end tag handler
     def HandleEndTagSpanClassDef(self):
-        areaType = self.GetAreaType()
-        if areaType == ("ol", ("class", "h-g")):
-            self.defs.append(("[" + self.tmpGram + "] " + self.tmpDef, []))
+        if self.CheckStack([("ol", ("class", "h-g")), 
+                            ("span",("class", "sn-gs")),
+                            ("li",("class", "sn-g"))]):
+            if self.tmpUse == "":
+                self.defs.append(("[" + self.tmpGram + "] " + self.tmpDef, []))
+            else:
+                self.defs.append(("[" + self.tmpGram + "] (" + self.tmpUse + ") " + self.tmpDef, []))
         self.tmpGram = ""
+        self.tmpUse = ""
         self.tmpDef = ""
         
     def HandleEndTagSpanClassXg(self):
-        areaType = self.GetAreaType()
-        if areaType == ("ol", ("class", "h-g")):
+        if self.CheckStack([("ol", ("class", "h-g")), 
+                            ("span",("class", "sn-gs")),
+                            ("li",("class", "sn-g")),
+                            ("span",("class", "x-gs"))]):
             curDef = self.defs.pop()
             curDef[1].append(self.tmpExampleSentence)
             self.defs.append(curDef)
@@ -90,15 +96,18 @@ class MyHtmlParser(HTMLParser):
         self.tmpName = data
         
     def HandleDataTagSpanClassPhon(self, data):
-        areaType = self.GetAreaType()
-        if areaType == ("div", ("class", "top-g")):
+        if self.CheckStack([("div", ("class", "top-g"))]):
             self.tmpPhon = data
         
-    def HandleDataTagSpanClassPos(self, data):
-        areaType = self.GetAreaType()
-        if areaType == ("div", ("class", "webtop-g")):
+    def HandleDataTagSpanClassPos(self, data):        
+        if self.CheckStack([("div", ("class", "top-g")), ("div", ("class", "webtop-g"))]):
             self.tmpPos = data
-        elif ("ol", ("class", "h-g")):
+        elif self.CheckStack([("ol", ("class", "h-g")), ("span", ("class", "gram-g"))]):
+            self.tmpGram = data
+        elif self.CheckStack([("ol", ("class", "h-g")),  
+                              ("span", ("class", "sn-gs")),  
+                              ("li", ("class", "sn-g")), 
+                              ("span", ("class", "pos-g"))]):
             self.tmpGram = data
         
     def HandleDataTagSpanClassCf(self, data):
@@ -109,12 +118,15 @@ class MyHtmlParser(HTMLParser):
             self.tmpExampleSentence = self.tmpExampleSentence + data + " "
                 
     def HandleDataTagSpanClassExp(self, data):
-        dataTpe = self.GetDataType()
-        if dataTpe == ("span", ("class", "sn-gs")):
+        dataType = self.GetDataType()
+        if dataType == ("span", ("class", "sn-gs")):
             self.tmpDef = self.tmpDef + data
-        elif dataTpe == ("span", ("class", "x-gs")):
+        elif dataType == ("span", ("class", "x-gs")):
             self.tmpExampleSentence = self.tmpExampleSentence + data
-        
+    
+    def HandleDataTagSpanClassUse(self, data):
+        self.tmpUse = self.tmpUse + data
+    
     def HandleDataTagSpanClassDef(self, data):      
         self.tmpDef = self.tmpDef + data
     
@@ -127,11 +139,15 @@ class MyHtmlParser(HTMLParser):
     def HandleDataTagSpanClassX(self, data):  
         self.tmpExampleSentence = self.tmpExampleSentence + data
         
+    def HandleDataTagSpanClassGl(self, data): 
+        if self.CheckStack([("span", ("class", "x-g")), ("span", ("class", "rx-g")), ("span", ("class", "x"))]):
+            self.tmpExampleSentence = self.tmpExampleSentence + "(=" + data + ")"
+        
     def HandleDataTagStrongClassPseudo(self, data):
-        dataTpe = self.GetDataType()
-        if dataTpe == ("span", ("class", "sn-gs")):
+        dataType = self.GetDataType()
+        if dataType == ("span", ("class", "sn-gs")):
             self.tmpDef = self.tmpDef + data
-        elif dataTpe == ("span", ("class", "x-gs")):
+        elif dataType == ("span", ("class", "x-gs")):
             self.tmpExampleSentence = self.tmpExampleSentence + data
     
     #tag:   "span"
