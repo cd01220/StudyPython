@@ -18,6 +18,8 @@ if os.path.exists("VcUnitTestProject"):
     shutil.rmtree("VcUnitTestProject")
 if os.path.exists("UnitTestCodes"):
     shutil.rmtree("UnitTestCodes")
+if os.path.exists("Documents"):
+    shutil.rmtree("Documents")
 os.remove("ReadMe.txt")
 os.remove(oldSlnNmae)
 os.rename(newSlnNmae, oldSlnNmae)

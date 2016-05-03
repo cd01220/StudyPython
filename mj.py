@@ -433,7 +433,7 @@ def PrintLostOfRivalHupai():
             print("{0:5d}".format(index), 
                   "{0:9d} {1:8d} {2:3d} {3:s}".format(leftRivals, paiqiang, fan, TypeName[type]))
             index += 1
-    area = [(0, 32), (4, 32), (8, 32), (16, 32)]
+    area = [(0, 4), (4, 8), (8, 12), (12, 16), (16, 20), (20, 24), (24, 28)]
     print("If host didn't Hupai in area [begin, end), how much host will lost?")
     for begin, end in area:
         lost = CalcLostOfRivalHupai(begin, end)
