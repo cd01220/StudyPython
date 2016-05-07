@@ -6,177 +6,356 @@ import sys
  
 class MyHtmlParser(HTMLParser):        
     def __init__(self):
-        HTMLParser.__init__(self, strict=False)
-        self.tagAttrs = []   #[("span", ("class", "def")]
-        self.defs = []   #[("definition", (example sentence 1, example sentence 2, ...))]
+        HTMLParser.__init__(self, strict=False)      
+        self.StartTagHandler = \
+        {
+            ("div", ("class", "webtop-g")):     self.HandleStartTagDivClassWebtopg,
+            ("span", ("class", "phon")):        self.HandleStartTagSpanClassPhon, 
+            ("span", ("class", "sn-g")):        self.HandleStartTagSpanClassSng,
+            ("li", ("class", "sn-g")):          self.HandleStartTagLiClassSng,            
+            ("span", ("class", "x-g")):         self.HandleStartTagSpanClassXg,
+            ("span", ("class", "gram-g")):      self.HandleStartTagSpanClassGramg,
+            ("span", ("class", "use")):         self.HandleStartTagSpanClassUse,
+            ("span", ("class", "collapse")):    self.HandleStartTagSpanClassCollapse,
+            ("span", ("class", "idm-gs")):      self.HandleStartTagSpanClassIdmgs,
+            ("a",    ("class", "Ref")):         self.HandleStartTagAClassRef,
+            ("span", ("class", "v-gs")):        self.HandleStartTagAClassVgs,
+            ("span", ("class", "label-g")):     self.HandleStartTagAClassLabelg,
+            ("span", ("class", "un")):          self.HandleStartTagSpanClassUn
+        }
         self.EndTagHandler = \
         {
-            ("span", ("class", "def")): self.HandleEndTagSpanClassDef, 
-            ("span", ("class", "x-g")): self.HandleEndTagSpanClassXg
+            ("div", ("class", "webtop-g")):     self.HandleEndTagDivClassWebtopg,    
+            ("span", ("class", "phon")):        self.HandleEndTagSpanClassPhon,     
+            ("span", ("class", "sn-g")):        self.HandleEndTagSpanClassSng,
+            ("li", ("class", "sn-g")):          self.HandleEndTagLiClassSng,
+            ("span", ("class", "x-g")):         self.HandleEndTagSpanClassXg,
+            ("span", ("class", "gram-g")):      self.HandleEndTagSpanClassGramg,
+            ("span", ("class", "use")):         self.HandleEndTagSpanClassUse,
+            ("span", ("class", "collapse")):    self.HandleEndTagSpanClassCollapse,
+            ("span", ("class", "idm-gs")):      self.HandleEndTagSpanClassIdmgs,
+            ("a",    ("class", "Ref")):         self.HandleEndTagAClassRef,
+            ("span", ("class", "v-gs")):        self.HandleEndTagAClassVgs,
+            ("span", ("class", "label-g")):     self.HandleEndTagAClassLabelg,
+            ("span", ("class", "un")):          self.HandleEndTagSpanClassUn
         }
         self.DataHandler = \
-        {
-            ("h2", ("class", "h")): self.HandleDataTagH2ClassH, 
-            ("span", ("class", "phon")): self.HandleDataTagSpanClassPhon, 
-            ("span", ("class", "pos")): self.HandleDataTagSpanClassPos,
-            ("span", ("class", "cf")): self.HandleDataTagSpanClassCf, 
-            ("span", ("class", "exp")): self.HandleDataTagSpanClassExp,
-            ("span", ("class", "use")): self.HandleDataTagSpanClassUse,            
-            ("span", ("class", "def")): self.HandleDataTagSpanClassDef,
-            ("span", ("class", "eb")): self.HandleDataTagSpanClassEb,
-            ("span", ("class", "ndv")): self.HandleDataTagSpanClassNdv,            
-            ("span", ("class", "gram")): self.HandleDataTagSpanClassGram,
-            ("span", ("class", "x")): self.HandleDataTagSpanClassX,
-            ("span", ("class", "gl")): self.HandleDataTagSpanClassGl,
-            ("strong", ("class", "pseudo")): self.HandleDataTagStrongClassPseudo
+        {        
+            ("h2", ("class", "h")):             self.HandleDataTagH2ClassH, 
+            ("span", ("class", "phon")):        self.HandleDataTagSpanClassPhon, 
+            ("span", ("class", "wrap")):        self.HandleDataTagSpanClassWrap,
+            ("span", ("class", "sep")):         self.HandleDataTagSpanClassSep,
+            ("span", ("class", "cl")):          self.HandleDataTagSpanClassCl,
+            ("span", ("class", "ptl")):         self.HandleDataTagSpanClassPtl,
+            ("strong", ("class", "pseudo")):    self.HandleDataTagStrongClassPseudo,
+            ("span", ("class", "pos")):         self.HandleDataTagSpanClassPos,           
+            ("span", ("class", "def")):         self.HandleDataTagSpanClassDef,
+            ("span", ("class", "x")):           self.HandleDataTagSpanClassX,
+            ("span", ("class", "cf")):          self.HandleDataTagSpanClassCf, 
+            ("span", ("class", "exp")):         self.HandleDataTagSpanClassExp,           
+            ("span", ("class", "gram")):        self.HandleDataTagSpanClassGram,            
+            ("span", ("class", "use")):         self.HandleDataTagSpanClassUse, 
+            ("span", ("class", "name")):        self.HandleDataTagSpanClassName,
+            ("span", ("class", "prefix")):      self.HandleDataTagSpanClassPrefix,
+            ("span", ("class", "gl")):          self.HandleDataTagSpanClassGl,
+            ("span", ("class", "ndv")):         self.HandleDataTagSpanClassNdv,
+            ("span", ("class", "reg")):         self.HandleDataTagSpanClassReg,
+            ("span", ("class", "dtxt")):         self.HandleDataTagSpanClassDtxt,
+            ("span", ("class", "xh")):          self.HandleDataTagSpanClassXh,
+            ("span", ("class", "xs")):          self.HandleDataTagSpanClassXs 
         }
-        #temp data
-        self.tmpName = ""
-        self.tmpPhon = "" 
-        self.tmpPos = ""   #verb, noun, ...
-        self.tmpGram = ""  #transitive, intransitive, ...
-        self.tmpUse = ""   #(not usually used in the progressive tenses)
-        self.tmpDef = ""
-        self.tmpExampleSentence = ""
+        #const
+        self.IgnoreCategoris = ["collapse", "idm-gs", "A-Ref", "v-gs", "un"]
+        #member variable 1
+        self.tagAttrs = []   #[("span", ("class", "def")]
+        #member variable 2
+        self.wordName = ""
+        self.wordPhon = ""
+        self.wordPhonType = ""
+        self.wordClass = ""
+        self.dataCategoris = ["bottom"]  #add the "bottom" to make sure the list never be empty
+        self.definitionTuples = []
+        self.definitionTuple = {"definition": {"def": "", "cfexp": "", "exp": "", "gram": "", "pos": "", "use": ""}, "examples": []}
+        self.example = {"x": "", "cfexp": ""}
+        self.areaFlag = "definition"
+       
+    #######################start tag handler
+    def HandleStartTagDivClassWebtopg(self):
+        if self.dataCategoris[len(self.dataCategoris) - 1] in self.IgnoreCategoris:
+            return
+        self.dataCategoris.append("webtop-g")
     
-    def CheckStack(self, subStack):
-        totalStack = self.tagAttrs
-        assert len(totalStack) > 0 and len(subStack) > 0
-        m = len(totalStack)
-        for subTop in subStack[::-1]:
-            for m in range(m, 0, -1):
-                if subTop == totalStack[m-1]:
-                    break
-            m = m - 1
-            if subTop != totalStack[m]:
-                return False
-        excludeTag = [("span", ("class", "collapse")), ("span", ("class", "idm-gs"))]
-        for i in totalStack:
-            for ii in excludeTag:
-                if i == ii:
-                    return False                
-        return True         
-     
-    #return: "definition" or "example sentence" or "" 
-    def GetDataType(self):
-        dataType = ("pseudo", ("class", "pseudo"))
-        i = len(self.tagAttrs)
-        for i in range(len(self.tagAttrs), 0, -1):
-            tagAttr = self.tagAttrs[i-1]
-            if tagAttr[0] == "span":
-                if tagAttr[1][0] == "class":
-                    if tagAttr[1][1] in ["sn-gs", "x-gs"]:
-                        dataType = tagAttr
-                        break
-        return dataType
-     
+    def HandleStartTagSpanClassPhon(self):
+        if self.dataCategoris[len(self.dataCategoris) - 1] in self.IgnoreCategoris:
+            return
+        self.dataCategoris.append("phon")
+        
+    def HandleStartTagSpanClassSng(self):
+        if self.dataCategoris[len(self.dataCategoris) - 1] in self.IgnoreCategoris:
+            return
+        self.dataCategoris.append("sn-g")
+        self.areaFlag = "definition"
+        
+    def HandleStartTagLiClassSng(self):  
+        self.HandleStartTagSpanClassSng()
+                
+    def HandleStartTagSpanClassXg(self):
+        if self.dataCategoris[len(self.dataCategoris) - 1] in self.IgnoreCategoris:
+            return
+        self.dataCategoris.append("x-g")
+        self.areaFlag = "example"
+        
+    def HandleStartTagSpanClassGramg(self):
+        if self.dataCategoris[len(self.dataCategoris) - 1] in self.IgnoreCategoris:
+            return
+        self.dataCategoris.append("gram-g")
+        
+    def HandleStartTagSpanClassUse(self):
+        if self.dataCategoris[len(self.dataCategoris) - 1] in self.IgnoreCategoris:
+            return
+        self.dataCategoris.append("use")
+        
+    def HandleStartTagSpanClassCollapse(self):
+        self.dataCategoris.append("collapse")
+        
+    def HandleStartTagSpanClassIdmgs(self):
+        self.dataCategoris.append("idm-gs")
+    
+    def HandleStartTagAClassRef(self):
+        self.dataCategoris.append("A-Ref")
+    
+    def HandleStartTagAClassVgs(self):
+        self.dataCategoris.append("v-gs")
+        
+    def HandleStartTagAClassLabelg(self):
+        self.dataCategoris.append("label-g")
+    
+    def HandleStartTagSpanClassUn(self):
+        self.dataCategoris.append("un")
+        
     #######################end tag handler
-    def HandleEndTagSpanClassDef(self):
-        if self.CheckStack([("ol", ("class", "h-g")), 
-                            ("span",("class", "sn-gs")),
-                            ("li",("class", "sn-g"))]):
-            if self.tmpUse == "":
-                self.defs.append(("[" + self.tmpGram + "] " + self.tmpDef, []))
-            else:
-                self.defs.append(("[" + self.tmpGram + "] (" + self.tmpUse + ") " + self.tmpDef, []))
-        self.tmpGram = ""
-        self.tmpUse = ""
-        self.tmpDef = ""
+    def HandleEndTagDivClassWebtopg(self):
+        size = len(self.dataCategoris)
+        if self.dataCategoris[len(self.dataCategoris) - 1] in self.IgnoreCategoris:
+            return
+        assert self.dataCategoris[len(self.dataCategoris) - 1] == "webtop-g"
+        self.dataCategoris.pop()
+    
+    def HandleEndTagSpanClassPhon(self):
+        size = len(self.dataCategoris)
+        if self.dataCategoris[len(self.dataCategoris) - 1] in self.IgnoreCategoris:
+            return
+        assert self.dataCategoris[len(self.dataCategoris) - 1] == "phon"
+        self.wordPhonType = ""
+        self.dataCategoris.pop()        
+    
+    def HandleEndTagSpanClassSng(self):
+        size = len(self.dataCategoris)
+        if self.dataCategoris[len(self.dataCategoris) - 1] in self.IgnoreCategoris:
+            return
+        assert self.dataCategoris[len(self.dataCategoris) - 1] == "sn-g"
+        self.dataCategoris.pop()
+        self.AddDefinitionTupleIntoDefinitionTuples()
+        self.definitionTuple = \
+        {
+            "definition": {"cfexp": "", "def": "", "gram": "", "pos": "", "use": ""}, 
+            "examples": []
+        }
+        
+    def HandleEndTagLiClassSng(self):  
+        self.HandleEndTagSpanClassSng() 
         
     def HandleEndTagSpanClassXg(self):
-        if self.CheckStack([("ol", ("class", "h-g")), 
-                            ("span",("class", "sn-gs")),
-                            ("li",("class", "sn-g")),
-                            ("span",("class", "x-gs"))]):
-            curDef = self.defs.pop()
-            curDef[1].append(self.tmpExampleSentence)
-            self.defs.append(curDef)
-        self.tmpExampleSentence = ""
+        size = len(self.dataCategoris)
+        if self.dataCategoris[size - 1] in self.IgnoreCategoris:
+            return        
+        assert self.dataCategoris[size - 1] == "x-g"
+        self.dataCategoris.pop()
+        self.AddExampleIntoDefinitionTuple()
+        self.example = {"x": "", "cfexp": ""}
         
-    #######################data handler        
+    def HandleEndTagSpanClassGramg(self):
+        size = len(self.dataCategoris)
+        if self.dataCategoris[size - 1] in self.IgnoreCategoris:
+            return
+        assert self.dataCategoris[size - 1] == "gram-g"
+        self.dataCategoris.pop()       
+        
+    def HandleEndTagSpanClassUse(self):
+        size = len(self.dataCategoris) 
+        if self.dataCategoris[size - 1] in self.IgnoreCategoris:
+            return
+        assert self.dataCategoris[size - 1] == "use"
+        self.dataCategoris.pop()
+        
+    def HandleEndTagSpanClassCollapse(self):
+        assert self.dataCategoris[len(self.dataCategoris) - 1] == "collapse"
+        self.dataCategoris.pop()
+        
+    def HandleEndTagSpanClassIdmgs(self):
+        assert self.dataCategoris[len(self.dataCategoris) - 1] == "idm-gs"
+        self.dataCategoris.pop()
+        
+    def HandleEndTagAClassRef(self):
+        assert self.dataCategoris[len(self.dataCategoris) - 1] == "A-Ref"
+        self.dataCategoris.pop()
+        
+    def HandleEndTagAClassVgs(self):
+        assert self.dataCategoris[len(self.dataCategoris) - 1] == "v-gs"
+        self.dataCategoris.pop()
+        
+    def HandleEndTagAClassLabelg(self):
+        assert self.dataCategoris[len(self.dataCategoris) - 1] == "label-g"
+        self.dataCategoris.pop()
+        
+    def HandleEndTagSpanClassUn(self):
+        assert self.dataCategoris[len(self.dataCategoris) - 1] == "un"
+        self.dataCategoris.pop()
+        
+    #######################data handler       
     def HandleDataTagH2ClassH(self, data):
-        self.tmpName = data
-        
+        size = len(self.dataCategoris)
+        if self.dataCategoris[size - 1] in self.IgnoreCategoris:
+            return            
+        assert self.dataCategoris[len(self.dataCategoris) - 1] == "webtop-g"
+        self.wordName = data
+    
     def HandleDataTagSpanClassPhon(self, data):
-        if self.CheckStack([("div", ("class", "top-g"))]):
-            self.tmpPhon = data
+        size = len(self.dataCategoris)
+        if self.dataCategoris[size - 1] in self.IgnoreCategoris:
+            return
+        assert self.dataCategoris[len(self.dataCategoris) - 1] == "phon"
+        if self.wordPhonType == "NAmE":
+            self.wordPhon += data
+    
+    def HandleDataTagSpanClassWrap(self, data):
+        size = len(self.dataCategoris)
+        if self.dataCategoris[size - 1] in self.IgnoreCategoris:
+            return            
+        category = self.dataCategoris[len(self.dataCategoris) - 1]
+        if category == "sn-g" or category == "x-g":
+            if self.areaFlag == "definition":
+                self.definitionTuple["definition"]["def"] += data
+            elif category == "x-g":
+                self.example["x"] += data
+        elif category == "gram-g":
+            self.definitionTuple["definition"]["gram"] += data
+        elif category == "use":
+            self.definitionTuple["definition"]["use"] += data
+        elif category == "phon" and self.wordPhonType == "NAmE":
+            self.wordPhon += data
+    
+    def HandleDataTagSpanClassSep(self, data):
+        self.HandleDataTagSpanClassWrap(data)
         
-    def HandleDataTagSpanClassPos(self, data):        
-        if self.CheckStack([("div", ("class", "top-g")), ("div", ("class", "webtop-g"))]):
-            self.tmpPos = data
-        elif self.CheckStack([("ol", ("class", "h-g")), ("span", ("class", "gram-g"))]):
-            self.tmpGram = data
-        elif self.CheckStack([("ol", ("class", "h-g")),  
-                              ("span", ("class", "sn-gs")),  
-                              ("li", ("class", "sn-g")), 
-                              ("span", ("class", "pos-g"))]):
-            self.tmpGram = data
+    def HandleDataTagSpanClassCl(self, data):
+        self.HandleDataTagSpanClassWrap(data)
         
-    def HandleDataTagSpanClassCf(self, data):
-        dataType = self.GetDataType()
-        if dataType == ("span", ("class", "sn-gs")):
-            self.tmpDef = self.tmpDef + data + " "
-        elif dataType == ("span", ("class", "x-gs")):
-            self.tmpExampleSentence = self.tmpExampleSentence + data + " "
-                
-    def HandleDataTagSpanClassExp(self, data):
-        dataType = self.GetDataType()
-        if dataType == ("span", ("class", "sn-gs")):
-            self.tmpDef = self.tmpDef + data
-        elif dataType == ("span", ("class", "x-gs")):
-            self.tmpExampleSentence = self.tmpExampleSentence + data
+    def HandleDataTagSpanClassPtl(self, data):
+        self.HandleDataTagSpanClassWrap(data)
     
-    def HandleDataTagSpanClassUse(self, data):
-        self.tmpUse = self.tmpUse + data
-    
-    def HandleDataTagSpanClassDef(self, data):      
-        self.tmpDef = self.tmpDef + data
-    
-    def HandleDataTagSpanClassEb(self, data):  
-        if self.CheckStack([("ol", ("class", "h-g"))]):
-            dataType = self.GetDataType()
-            if dataType == ("span", ("class", "sn-gs")):
-                self.tmpDef = self.tmpDef + data
-            elif dataType == ("span", ("class", "x-gs")):
-                self.tmpExampleSentence = self.tmpExampleSentence + data
-    
-    def HandleDataTagSpanClassNdv(self, data): 
-        if self.CheckStack([("ol", ("class", "h-g"))]):
-            dataType = self.GetDataType()
-            if dataType == ("span", ("class", "sn-gs")):
-                self.tmpDef = self.tmpDef + data
-            elif dataType == ("span", ("class", "x-gs")):
-                self.tmpExampleSentence = self.tmpExampleSentence + data
-    
-    
-    def HandleDataTagSpanClassGram(self, data):
-        if self.tmpGram == "":
-            self.tmpGram = data
-        else:
-            self.tmpGram = self.tmpGram + "," + data
-        
-    def HandleDataTagSpanClassX(self, data):  
-        self.tmpExampleSentence = self.tmpExampleSentence + data
-        
-    def HandleDataTagSpanClassGl(self, data): 
-        if self.CheckStack([("span", ("class", "x-g")), ("span", ("class", "rx-g")), ("span", ("class", "x"))]):
-            self.tmpExampleSentence = self.tmpExampleSentence + "(=" + data + ")"
-        
     def HandleDataTagStrongClassPseudo(self, data):
-        if self.CheckStack([("ol", ("class", "h-g"))]):
-            dataType = self.GetDataType()
-            if dataType == ("span", ("class", "sn-gs")):
-                self.tmpDef = self.tmpDef + data
-            elif dataType == ("span", ("class", "x-gs")):
-                self.tmpExampleSentence = self.tmpExampleSentence + data
+        self.HandleDataTagSpanClassWrap(data)
+       
+    def HandleDataTagSpanClassPrefix(self, data):
+        size = len(self.dataCategoris)
+        if self.dataCategoris[size - 1] in self.IgnoreCategoris:
+            return            
+        category = self.dataCategoris[len(self.dataCategoris) - 1]
+        if category == "x-g" and self.areaFlag == "example":
+            self.example["x"] += data
+        
+    def HandleDataTagSpanClassGl(self, data):
+        self.HandleDataTagSpanClassWrap(data)
+        
+    def HandleDataTagSpanClassNdv(self, data):
+        self.HandleDataTagSpanClassWrap(data)
+        
+    def HandleDataTagSpanClassReg(self, data):
+        self.HandleDataTagSpanClassWrap(data)
+        
+    def HandleDataTagSpanClassDtxt(self, data):
+        self.HandleDataTagSpanClassWrap(data)
+        
+    def HandleDataTagSpanClassXh(self, data):
+        self.HandleDataTagSpanClassWrap(data)
+        
+    def HandleDataTagSpanClassXs(self, data):
+        self.HandleDataTagSpanClassWrap(data)
+        
+    def HandleDataTagSpanClassPos(self, data):  
+        size = len(self.dataCategoris)
+        if self.dataCategoris[size - 1] in self.IgnoreCategoris:
+            return            
+        category = self.dataCategoris[len(self.dataCategoris) - 1]
+        if category == "sn-g":
+            self.definitionTuple["definition"]["pos"] += data
+        elif category == "webtop-g":
+            self.wordClass = data
+
+    def HandleDataTagSpanClassDef(self, data): 
+        size = len(self.dataCategoris)
+        if self.dataCategoris[size - 1] in self.IgnoreCategoris:
+            return            
+        assert self.dataCategoris[len(self.dataCategoris) - 1] == "sn-g"
+        self.definitionTuple["definition"]["def"] += data
     
+    def HandleDataTagSpanClassX(self, data):  
+        size = len(self.dataCategoris)
+        if self.dataCategoris[size - 1] in self.IgnoreCategoris:
+            return            
+        assert self.dataCategoris[len(self.dataCategoris) - 1] == "x-g"
+        self.example["x"] += data
+     
+    def HandleDataTagSpanClassCf(self, data): 
+        size = len(self.dataCategoris)
+        if self.dataCategoris[size - 1] in self.IgnoreCategoris:
+            return            
+        category = self.dataCategoris[len(self.dataCategoris) - 1]    
+        if category == "sn-g" or category == "x-g":
+            if self.areaFlag == "definition":
+                self.definitionTuple["definition"]["cfexp"] += data
+            else:
+                self.example["cfexp"] += data
+        else:
+            pass  #ignore "cf", "exp" not surrounded by "sn-g" or "x-g"
+    
+    def HandleDataTagSpanClassExp(self, data):
+        self.HandleDataTagSpanClassCf(data)
+        
+    def HandleDataTagSpanClassGram(self, data):
+        size = len(self.dataCategoris)
+        if self.dataCategoris[size - 1] in self.IgnoreCategoris:
+            return            
+        assert self.dataCategoris[len(self.dataCategoris) - 1] == "gram-g"
+        self.definitionTuple["definition"]["gram"] += data
+            
+    def HandleDataTagSpanClassUse(self, data):
+        size = len(self.dataCategoris)
+        if self.dataCategoris[size - 1] in self.IgnoreCategoris:
+            return            
+        assert self.dataCategoris[len(self.dataCategoris) - 1] == "use"
+        self.definitionTuple["definition"]["use"] += data
+    
+    def HandleDataTagSpanClassName(self, data):
+        size = len(self.dataCategoris)
+        if self.dataCategoris[size - 1] in self.IgnoreCategoris:
+            return            
+        assert self.dataCategoris[len(self.dataCategoris) - 1] == "phon"
+        self.wordPhonType = data
+        
+    #######################overwrited function    
     #tag:   "span"
     #attrs: (("class", "def"), ("id", "look_1__72"), ...)
     def handle_starttag(self, tag, attrs):
         if len(attrs) != 0 and len(attrs[0]) != 0:
-            self.tagAttrs.append((tag, attrs[0]))
+            tagAttr = (tag, attrs[0]) 
         else:
-            self.tagAttrs.append((tag, ("class", "pseudo"))) #pseudo tuple to invoid unnecessary comparation
+            #pseudo tuple to invoid unnecessary comparation  
+            tagAttr = (tag, ("class", "pseudo"))  
+        if tagAttr in self.StartTagHandler:
+            self.StartTagHandler[tagAttr]()        
+        self.tagAttrs.append(tagAttr)
             
     def handle_endtag(self, tag):    
         tagAttr = self.tagAttrs.pop()
@@ -189,24 +368,51 @@ class MyHtmlParser(HTMLParser):
         tagAttr = self.tagAttrs[len(self.tagAttrs) - 1]
         if tagAttr in self.DataHandler:
             self.DataHandler[tagAttr](data)
-        
-    def Print(self):
-        print(self.tmpName, "/" + self.tmpPhon + "/", "(word building: #)")
-        index = 1
-        for i in self.defs:
-            if index == 1:
-                print(self.tmpPos + ".", end=" ")
-            print(index, i[0])
-            for ii in i[1]:
-                print(":", ii)
-            index = index + 1
     
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-16')                 
-parser = MyHtmlParser()
-assert len(sys.argv) == 2
-srcFileObj = codecs.open(sys.argv[1], "r", "utf-8")
+    #######################private function
+    def AddDefinitionTupleIntoDefinitionTuples(self):
+        string = "[] "
+        if self.definitionTuple["definition"]["gram"] != "":
+            string = self.definitionTuple["definition"]["gram"] + " "
+        if self.definitionTuple["definition"]["pos"] != "":
+            string = string + self.definitionTuple["definition"]["pos"] + " "
+        if self.definitionTuple["definition"]["use"] != "":
+            string = string + self.definitionTuple["definition"]["use"] + " "
+        if self.definitionTuple["definition"]["cfexp"] != "":
+            string = string + self.definitionTuple["definition"]["cfexp"] + " "
+        string = string + self.definitionTuple["definition"]["def"]
+        if string == "[] ":
+            return
+        self.definitionTuples.append({"definition": string, "examples": self.definitionTuple["examples"]})
 
-for line in srcFileObj:
-    parser.feed(line)
+    def AddExampleIntoDefinitionTuple(self):
+        if self.example["cfexp"] == "":
+            self.definitionTuple["examples"].append(self.example["x"])
+        else:
+            self.definitionTuple["examples"].append(self.example["cfexp"] + " " + self.example["x"])
     
-parser.Print()
+    #######################public function    
+    def ReadResult(self):
+        output = [self.wordName + self.wordPhon + "(word building: #)"]
+        index = 1
+        for i in self.definitionTuples:
+            if index == 1:
+                output.append(self.wordClass + ". " + str(index) + " " + i["definition"])
+            else:
+                output.append(str(index) + " " + i["definition"])
+            for ii in i["examples"]:
+                output.append(": " + ii)
+            index = index + 1
+        return output
+
+if __name__ == '__main__':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-16')                 
+    parser = MyHtmlParser()
+    assert len(sys.argv) == 2
+    srcFileObj = codecs.open(sys.argv[1], "r", "utf-8")
+
+    for line in srcFileObj:
+        parser.feed(line)
+    
+    for i in parser.ReadResult():
+        print(i)
