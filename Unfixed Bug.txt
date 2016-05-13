@@ -1,4 +1,4 @@
 FormatWords.py
   1 bead 的第二个释义不正确.                 ----fixed
   2 gracious 的第一个释义不正确.             ----fixed
-  3 fling 的第三个释义不正确 ("|" 和 "+ speech" 的顺序反了).
+  3 fling 的第三个释义不正确 ("|" 和 "+ speech" 的顺序反了).  ----fixed
