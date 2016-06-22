@@ -1,0 +1,1 @@
+PrintIgnoreFiles.py | clip

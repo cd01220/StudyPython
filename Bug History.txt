@@ -1,5 +1,0 @@
-FormatWords.py
-  1 bead 的第二个释义不正确.                 ----fixed
-  2 gracious 的第一个释义不正确.             ----fixed
-  3 fling 的第三个释义不正确 ("|" 和 "+ speech" 的顺序反了).  ----fixed
-  4 desert 的输出不正确.      ---bug的原因是desert 将音标的内容放在了 ("span|li", [("class", "sn-g")]) 标签之内, 因为这个bug的修改难度比较大, 并且这种情况(需求)并不常见, 所以暂时不修改这个bug.
