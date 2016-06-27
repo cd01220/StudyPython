@@ -1,31 +1,30 @@
 from html.parser import HTMLParser
-from html.entities import name2codepoint
 import codecs
 import io
-import sys  
- 
+import sys
 
-class MyHtmlParser(HTMLParser):        
-    ''' 
+
+class MyHtmlParser(HTMLParser):
+    '''
     def __init__(self, effecitvePatterns, ignoredPatterns):
     input:
         effecitvePatterns = [{"pattern name": "xxx", "pattern": [("tag name", [("class", "pos")])]}]
         ignoredPatterns   = [[("span", [("class", "collapse")])], [("span", [("class", "idm-gs")])]]
 
     result:
-    self.effecitvePatterns  = 
+    self.effecitvePatterns  =
     {
-        "name": 
+        "name":
         {
             value: "",
             pattern:
             [
                 {
-                    "tags": ("div", [("class", "webtop-g")]), 
+                    "tags": ("div", [("class", "webtop-g")]),
                     "is in": False
-                } 
+                }
                 {
-                    "tags": ("h2", [("class", "h")]), 
+                    "tags": ("h2", [("class", "h")]),
                     "is in": False
                 }
             ]
@@ -36,11 +35,11 @@ class MyHtmlParser(HTMLParser):
             pattern:
             [
                 {
-                    "tags": ("div", [("class", "webtop-g")]), 
+                    "tags": ("div", [("class", "webtop-g")]),
                     "is in": False
-                } 
+                }
                 {
-                    "tags": ("span", [("class", "pos")]), 
+                    "tags": ("span", [("class", "pos")]),
                     "is in": False
                 }
             ]
@@ -51,11 +50,11 @@ class MyHtmlParser(HTMLParser):
             pattern:
             [
                 {
-                    "tags": ("div", [("class", "pron-gs ei-g")]), 
+                    "tags": ("div", [("class", "pron-gs ei-g")]),
                     "is in": False
                 }
                 {
-                    "tags": ("span", [("class", "pron-g"), ("geo", n_am)] ), 
+                    "tags": ("span", [("class", "pron-g"), ("geo", n_am)] ),
                     "is in": False
                 }
             ]
@@ -66,23 +65,23 @@ class MyHtmlParser(HTMLParser):
             pattern:
             [
                 {
-                    "tags": ("span|li", [("class", "sn-g")]), 
+                    "tags": ("span|li", [("class", "sn-g")]),
                     "is in": False
                 }
             ]
         }
     }
-    self.ignoredPatterns  = 
+    self.ignoredPatterns  =
     [
         [
             {
-                "tags"  : ("span", [("class", "collapse")]), 
+                "tags"  : ("span", [("class", "collapse")]),
                 "is in": False
             }
         ],
         [
             {
-                "tags"  : ("span", [("class", "idm-gs")]), 
+                "tags"  : ("span", [("class", "idm-gs")]),
                 "is in": False
             }
         ],
@@ -93,17 +92,17 @@ class MyHtmlParser(HTMLParser):
             }
         ]
     ]
-    ''' 
+    '''
     def __init__(self, effecitvePatterns, ignoredPatterns, cssBlockTags):
-        HTMLParser.__init__(self, strict=False)   
+        HTMLParser.__init__(self, strict=False)
         self.tagStack = []
         self.cssBlockTags = cssBlockTags
         self.number = 1
-        #if self.history == "", means there is no data between 2 block tag, do not need insert redundant 
+        #if self.history == "", means there is no data between 2 block tag, do not need insert redundant
         #line break. for example: the "blazon" has no text for its 2nd definition
-        self.history = ""  
-        
-        self.effecitvePatterns = {}        
+        self.history = ""
+
+        self.effecitvePatterns = {}
         for pattern in effecitvePatterns:
             name = pattern["pattern name"]
             self.effecitvePatterns[name] = {}
@@ -111,16 +110,16 @@ class MyHtmlParser(HTMLParser):
             self.effecitvePatterns[name]["pattern"] = []
             for tag in pattern["pattern"]:
                 self.effecitvePatterns[name]["pattern"].append({"tags": tag, "is in": False})
-                
+
         self.ignoredPatterns = []
         for pattern in ignoredPatterns:
             tmp = []
             for tag in pattern:
                 tmp.append({"tags": tag, "is in": False})
             self.ignoredPatterns.append(tmp)
-          
-          
-    #######################overwrited function    
+
+
+    #######################overwritten function
     #input:
     #   tag  :   "span"
     #   attrs: (("class", "def"), ("id", "look_1__72"), ...)
@@ -129,11 +128,11 @@ class MyHtmlParser(HTMLParser):
     self.tagStack = \
     [
         {
-            "tag"    : ('span1', [('class', 'xxx1')]), 
+            "tag"    : ('span1', [('class', 'xxx1')]),
             "pattern": [('effecitvePatterns', "name", 0), ('effecitvePatterns', "phon", 0)]
         },
         {
-            "tag"    : ('span1', [('class', 'xxx2')]), 
+            "tag"    : ('span1', [('class', 'xxx2')]),
             "pattern": [('effecitvePatterns', "phon", 1), ('ignoredPatterns', 0, 0)]
         },
     ]
@@ -144,24 +143,24 @@ class MyHtmlParser(HTMLParser):
             pattern = self.effecitvePatterns[i1]["pattern"]
             for i2 in range(0, len(pattern)):
                 if pattern[i2]["is in"]:
-                    continue              
+                    continue
                 if self.CompareTag(pattern[i2]["tags"], (tag, attrs)):
-                    pattern[i2]["is in"] = True 
+                    pattern[i2]["is in"] = True
                     stackProperties.append(("effecitvePatterns", i1, i2))
                 break
         for i1 in range(0, len(self.ignoredPatterns)):
             pattern = self.ignoredPatterns[i1]
             for i2 in range(0, len(pattern)):
                 if pattern[i2]["is in"]:
-                    continue            
+                    continue
                 if self.CompareTag(pattern[i2]["tags"], (tag, attrs)):
-                    pattern[i2]["is in"] = True 
+                    pattern[i2]["is in"] = True
                     stackProperties.append(("ignoredPatterns", i1, i2))
                 break
-        
+
         self.tagStack.append({"tag":(tag, attrs), "pattern": stackProperties})
         #process css format
-        if self.IsInPattern("definition"):    
+        if self.IsInPattern("definition"):
             csStr = self.GetCssString((tag, attrs))
             if self.history != "":
                 self.effecitvePatterns["definition"]["value"] += csStr
@@ -173,55 +172,55 @@ class MyHtmlParser(HTMLParser):
             if self.CompareTag(("span", [("class", "xr-gs")]), (tag, attrs)):
                 self.effecitvePatterns["definition"]["value"] += "->"
             self.history = ""
-         
-    def handle_endtag(self, tag):    
+
+    def handle_endtag(self, tag):
         #to be fault-tolerant, we ignore tags without ending flag 3 times.
         for i in range(0, 3):
             topTag = self.tagStack.pop()
             if topTag["tag"][0] == tag:
                 break
         assert topTag["tag"][0] == tag
-        
+
         #process css format
         self.tagStack.append(topTag)
-        if self.IsInPattern("definition"):                
+        if self.IsInPattern("definition"):
             csStr = self.GetCssString(topTag["tag"])
             self.effecitvePatterns["definition"]["value"] += csStr
         topTag = self.tagStack.pop()
-                
+
         for i in topTag["pattern"]:
             assert i[0] == "effecitvePatterns" or i[0] == "ignoredPatterns"
             if i[0] == "effecitvePatterns":
                 self.effecitvePatterns[i[1]]["pattern"][i[2]]["is in"] = False
             else:
                 self.ignoredPatterns[i[1]][i[2]]["is in"] = False
-            
-                
-    def handle_data(self, data):      
+
+
+    def handle_data(self, data):
         #to be fault-tolerant
         if len(self.tagStack) == 0:
             return
-        
+
         #process line break
-        for i1 in self.effecitvePatterns:   
+        for i1 in self.effecitvePatterns:
             if self.IsInPattern(i1):
                 self.history = data
                 self.effecitvePatterns[i1]["value"] += data
                 break
-    
-    
-    #######################public function    
+
+
+    #######################public function
     #input:
-    #   left  = ("xxx|xxx", [("xxx", "xxx")]), "|" is delimiter 
-    #   right = ("xxx|xxx", [("xxx", "xxx")]), "|" is delimiter 
+    #   left  = ("xxx|xxx", [("xxx", "xxx")]), "|" is delimiter
+    #   right = ("xxx|xxx", [("xxx", "xxx")]), "|" is delimiter
     #   only 1 tag could include the delimiter "|"
     def CompareTag(self, left, right):
         if (len(left[1]) == 0 or len(right[1])) == 0:
             return False
         if len(left[1]) > len(right[1]):
             left, right = right, left
-        
-        if left[0].find("|") == -1:    
+
+        if left[0].find("|") == -1:
             if right[0].find("|") == -1:
                 if left[0] != right[0]:
                     return False
@@ -234,47 +233,47 @@ class MyHtmlParser(HTMLParser):
                     return False
             else:
                 raise AssertionError
-            
+
         for i in left[1]:
             if i not in right[1]:
                 return False
         return True
-    
-    
+
+
     def GetCssString(self, tag):
         csStr = ""
         if self.IsInTagList(self.cssBlockTags, tag):
             csStr = "\n"
         return csStr
-    
-    
+
+
     def GetEffectivePatternsState(self):
         definition = self.effecitvePatterns["definition"]["value"]
         while definition.find("\n \n") != -1:
             definition = definition.replace("\n \n", "\n")
         while definition.find("\n\n") != -1:
-            definition = definition.replace("\n\n", "\n")            
+            definition = definition.replace("\n\n", "\n")
         if len(definition) != 0 and definition[0] == "\n":
             definition = definition[1:]
         self.effecitvePatterns["definition"]["value"] = definition
         return self.effecitvePatterns
-        
-        
+
+
     def	GetIgnoredPatternsState(self):
         return self.ignoredPatterns
-    
-    
+
+
     def GetTagStack(self):
         return self.tagStack;
 
-        
+
     def IsInIgnoredPattern(self):
         for pattern in self.ignoredPatterns:
             if pattern[len(pattern) - 1]["is in"]:
                 return True
         return False
 
-        
+
     def IsInPattern(self, name):
         if self.IsInIgnoredPattern():
             return False
@@ -283,14 +282,14 @@ class MyHtmlParser(HTMLParser):
         pattern = self.effecitvePatterns[name]["pattern"]
         return pattern[len(pattern) - 1]["is in"] != 0
 
-        
-    def IsInTagList(self, tags, tag):    
+
+    def IsInTagList(self, tags, tag):
         for i in tags:
             if self.CompareTag(i, tag):
                 return True
         return False
-    
-    
+
+
     def ReadResult(self):
         effecitvePatterns = self.GetEffectivePatternsState()
         result = []
@@ -298,46 +297,46 @@ class MyHtmlParser(HTMLParser):
                       + effecitvePatterns["phonetic symbol"]["value"] \
                       + "(word building: #)")
         for i in (effecitvePatterns["word class"]["value"] + " " + effecitvePatterns["definition"]["value"]).split("\n"):
-            result.append(i)           
+            result.append(i)
         return result
-        
+
 if __name__ == '__main__':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-16')
     effecitvePatterns = \
     [
         {
-            "pattern name": "name", 
-            "pattern": 
+            "pattern name": "name",
+            "pattern":
             [
                 ("div", [("class", "webtop-g")]),
                 ("h2", [("class", "h")])
             ]
         },
         {
-            "pattern name": "phonetic symbol", 
-            "pattern": 
+            "pattern name": "phonetic symbol",
+            "pattern":
             [
                 ("div", [("class", "pron-gs ei-g")]),
                 ("span", [("class", "pron-g"), ("geo", "n_am")])
             ]
         },
         {
-            "pattern name": "word class", 
-            "pattern": 
+            "pattern name": "word class",
+            "pattern":
             [
                 ("div", [("class", "webtop-g")]),
                 ("span", [("class", "pos")])
             ]
         },
         {
-            "pattern name": "definition", 
-            "pattern": 
+            "pattern name": "definition",
+            "pattern":
             [
                 ("span|li", [("class", "sn-g")])
             ]
         }
     ]
-    
+
     ignoredPatterns = \
     [
         # my ignore list
@@ -350,17 +349,17 @@ if __name__ == '__main__':
         [
             ("span", [("class", "pron-g")]),
             ("span", [("class", "prefix")])
-        ],        
+        ],
         [
             ("span", [("class", "sym_first")])
-        ],        
+        ],
         [
             ("span", [("class", "un")])
-        ],       
+        ],
         [
             ("div", [("id", "ox-enlarge")])
         ],
-        # disply: none
+        # display: none
         [   #css .name format.
             ("span", [("class", "name")])
         ],
@@ -372,25 +371,24 @@ if __name__ == '__main__':
             ("span", [("class", "num")])
         ]
     ]
-    
+
     cssBlockTags = \
     [
-        #we do not take cate data between "sn-gs" and "sn-g"
-        #("span", [("class", "sn-gs")]),     
-        ("span|li", [("class", "sn-g")]), 
+        #we do not take care data between "sn-gs" and "sn-g"
+        #("span", [("class", "sn-gs")]),
+        ("span|li", [("class", "sn-g")]),
         ("span", [("class", "x-gs")]),
-        ("span", [("class", "x-g")]), 
+        ("span", [("class", "x-g")]),
         ("span", [("class", "xr-gs")]),
     ]
-    
+
     parser = MyHtmlParser(effecitvePatterns, ignoredPatterns, cssBlockTags)
     assert len(sys.argv) == 2
     srcFileObj = codecs.open(sys.argv[1], "r", "utf-8")
 
     for line in srcFileObj:
         parser.feed(line)
-        
+
     result = parser.ReadResult()
     for i in result:
         print(i)
-    

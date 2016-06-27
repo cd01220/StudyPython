@@ -1,5 +1,5 @@
 ----
-You have {1,3} Tong, x raivals need Tong,  what's the rate of any of 2 Tong exists in Paiqiang?
+You have {1,3} Tong, x rivals need Tong,  what's the rate of any of 2 Tong exists in Paiqiang?
 KeyRivalNum PaiqiangNum RateOfOne
           3          12      0.14
           2          12      0.20

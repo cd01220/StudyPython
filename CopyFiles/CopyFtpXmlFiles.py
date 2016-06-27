@@ -1,3 +1,6 @@
+#! /usr/bin/env python3.3
+# -*- coding: GB2312 -*-
+
 import os
 import fnmatch
 import glob
@@ -9,19 +12,19 @@ path  = "101"
 def main():
     for file in glob.glob("10*.xml"):
         os.remove(file);
-    
+
     ftp = FTP();
     ftp.connect(host);  # connect to host, default port
     ftp.login();        # user anonymous, password anonymous@
     ftp.cwd(path);      # change into "ftpPath" directory
-    
+
     files = ftp.nlst();
     for file in fnmatch.filter(files, "101*.xml"):
         print(file);
         fout = open(file, 'wb');
-        ftp.retrbinary('RETR %s' % file, fout.write); 
+        ftp.retrbinary('RETR %s' % file, fout.write);
         fout.close();
-    
+
     ftp.quit();
 
 if __name__ == '__main__':

@@ -2,7 +2,6 @@
 # -*- coding: GB2312 -*-
 
 import copy
-import itertools
 from functools import reduce
 
 #define constant
@@ -12,8 +11,8 @@ DebugHostXiajiaoRate = False
 
 def GetVersion():
     """
-    In order to make Majiang algorithm more usefull and easy to understand,
-    Liuhao rewrite Majiang algorithm based on python.  
+    In order to make Majiang algorithm more useful and easy to understand,
+    Liuhao rewrite Majiang algorithm based on python.
     """
     ver = "Majiang for Python3.3,  v1.0"
     return ver
@@ -45,10 +44,10 @@ class PaisDistribution:
     """
     thePaiqiang: number of pais left behind in Paiqiang.
     theKeyRival: The rival number who needs this kind of Pai(for example who need Tong).
-    effectivePais: The pais number in which the abailable pais distribute 
+    effectivePais: The pais number in which the available pais distribute
     """
-    def __init__(self, thePaiqiang, 
-                 theKeyRival, theAvailablePais, theIndispensablePais):        
+    def __init__(self, thePaiqiang,
+                 theKeyRival, theAvailablePais, theIndispensablePais):
         self.paiqiang = thePaiqiang
         self.keyRival = theKeyRival
         self.keyRivalPais = (TotalPais - thePaiqiang) * (theKeyRival / 4)
@@ -82,29 +81,29 @@ def CalcCombNumber(members, total):
         / reduce(lambda x,y:x*y, range(1, members + 1), 1)
     return combinations
 
-#get the rate of "the keyRival has exactly indispensablePais pais of availablePais" 
-#has been get by KeyRivals, 
-#caustion,  when paisDist.keyRivalPais is float,  this function is not too accurate,
-#we should use CalcRateOfAvailablePaisInRivals2(), this function is just for debuging.
-#if you dont want CalcRateOfAvailablePaisInRivals2(), please make sure rivalPais
+#get the rate of "the keyRival has exactly indispensablePais pais of availablePais"
+#has been get by KeyRivals,
+#caution,  when paisDist.keyRivalPais is float,  this function is not too accurate,
+#we should use CalcRateOfAvailablePaisInRivals2(), this function is just for debugging.
+#if you don't want CalcRateOfAvailablePaisInRivals2(), please make sure rivalPais
 #is integer
 def CalcRateOfAvailablePaisInRivals1(paisDist, doCalculateOnlyOneRival, isExacltly):
     if doCalculateOnlyOneRival:
         rivalPais = paisDist.oneRivalPais
     else:
         rivalPais = paisDist.keyRivalPais
-    combTotal = CalcCombNumber(rivalPais, paisDist.effectivePais);    
+    combTotal = CalcCombNumber(rivalPais, paisDist.effectivePais);
     if isExacltly:
-        combOk  = CalcCombNumber(paisDist.indispensablePais, paisDist.availablePais) 
-        combOk *= CalcCombNumber(rivalPais - paisDist.indispensablePais, 
+        combOk  = CalcCombNumber(paisDist.indispensablePais, paisDist.availablePais)
+        combOk *= CalcCombNumber(rivalPais - paisDist.indispensablePais,
                                  paisDist.effectivePais - paisDist.availablePais)
     else:
         combOk = 0
         loopEnd = min(rivalPais, paisDist.availablePais)
         for i in range(paisDist.indispensablePais, loopEnd + 1):
             combOk += CalcCombNumber(i, paisDist.availablePais) * \
-                      CalcCombNumber(rivalPais - i, 
-                                     paisDist.effectivePais - paisDist.availablePais) 
+                      CalcCombNumber(rivalPais - i,
+                                     paisDist.effectivePais - paisDist.availablePais)
     #print(combTotal, combOk)
     rate = combOk / combTotal
     return rate
@@ -115,7 +114,7 @@ def CalcRateOfAvailablePaisInRivals2(paisDist, doCalculateOnlyOneRival, isExaclt
         rivalPais = paisDist.oneRivalPais
     else:
         rivalPais = paisDist.keyRivalPais
-        
+
     rate = 0
     if isExacltly:
         rate1 = 1.0
@@ -135,10 +134,10 @@ def CalcRateOfAvailablePaisInRivals2(paisDist, doCalculateOnlyOneRival, isExaclt
         for i in range(paisDist.indispensablePais, paisDist.availablePais + 1):
             paisDist.indispensablePais = i
             rate += CalcRateOfAvailablePaisInRivals2(paisDist, doCalculateOnlyOneRival, True)
-            
+
     #print("4:", rate)
     return rate
-    
+
 def CalcRateOfAvailablePaisInRivals(paisDist, doCalculateOnlyOneRival, isExacltly):
     rate2 = CalcRateOfAvailablePaisInRivals2(paisDist, doCalculateOnlyOneRival, isExacltly);
     if DebugPaisInRivalRate:
@@ -148,13 +147,13 @@ def CalcRateOfAvailablePaisInRivals(paisDist, doCalculateOnlyOneRival, isExacltl
 
 #########################################################################################
 
-#### About pai you needed, for example 2 Wang, left behind in Paiqiang ####
-#Assume you have {1,3} Wang, {4,5} Tong.  How to get the rate of 2 Wang or {3,6} Tong to te 
+#### About pai you needed, for example 2 Wan, left behind in Paiqiang ####
+#Assume you have {1,3} Wan, {4,5} Tong.  How to get the rate of 2 Wan or {3,6} Tong
 #left in the Paiqiang?
 def PrintRateOfAvailablePaisInPaiqiang():
     #conditions: [(KeyRivalNumber, PaiqiangNumber, AvailablePaisNumber)]
     conditions = [(3, 12, 1), (2, 12, 1), (1, 12, 1)]
-    print("You have {1,3} Tong, x raivals need Tong, ",
+    print("You have {1,3} Tong, x rivals need Tong, ",
           "what's the rate of any of 2 Tong exists in Paiqiang?")
     print("KeyRivalNum", "PaiqiangNum", "RateOfOne")
     for x,y,z in conditions:
@@ -172,7 +171,7 @@ PrintRateOfAvailablePaisInPaiqiang()
 def CalcDianGangRate(keyRivalNum, paiqiangNum):
     """
     Calculate the rate of DianGang.
-    keyRivalNum: The rival number who needs this kind of Pai(for example who need Tong), 
+    keyRivalNum: The rival number who needs this kind of Pai(for example who need Tong),
                  3 >= keyRivalNum >= 1.
     paiqiangNum: number of pais left behind in Paiqiang.
     """
@@ -180,18 +179,18 @@ def CalcDianGangRate(keyRivalNum, paiqiangNum):
     #paisDist.Print()
     rate = CalcRateOfAvailablePaisInRivals(paisDist, True, True) * keyRivalNum
     return rate
-    
+
 def CalcRivalPengPaiRate(keyRivalNum, paiqiangNum):
     paisDist = PaisDistribution(paiqiangNum, keyRivalNum, 3, 2)
     #paisDist.Print()
     rate = CalcRateOfAvailablePaisInRivals(paisDist, True, False) * keyRivalNum
     return rate
-    
+
 def PrintGangAndPengRate():
     condition = [(1, 16), (1, 12), (1, 8), (1, 4)]
     print("You and x rivals need Tong, nobody abandon 9 Tong before, ",
           "what is the rate of DianGang when you abandon 9 Tong?")
-    print("KeyRivalNum", "PaiqiangNum", "keyRivalPais", "  GangRate", "   PengRate")    
+    print("KeyRivalNum", "PaiqiangNum", "keyRivalPais", "  GangRate", "   PengRate")
     for keyRival, paiqiang in condition:
         paisDist = PaisDistribution(paiqiang, keyRival, 0, 0)
         rateOfGang = CalcDianGangRate(keyRival,paiqiang)
@@ -201,21 +200,20 @@ def PrintGangAndPengRate():
 print("----")
 PrintGangAndPengRate()
 
-#no other rival needs Tong,  you have {1,3,7} Tong,  {2,5,66,8,9} in Paiqiang,  
+#no other rival needs Tong,  you have {1,3,7} Tong,  {2,5,66,8,9} in Paiqiang,
 #You can wait for 2 Tong,  or wait for two of 56689 Tong.  whether you should
 #abandon 1,3 Tong and waiting for two of 56689 Tong?
 def PrintSelectPais():
-    rivals = 4
     print("Case 1, host {1,3,7}, Paiqiang {2,5,6,6,8,9}")
     print("Rate of receiving only 2 Tong: {0:.2f}".format(1/4))
     print("Rate of receiving 56|68|89   : {0:.2f}".format(1/4 * 7/16 + 7/16 * 1/4 + 1/4 * 1/4))
-    
+
 print("----")
 PrintSelectPais()
 
-#your pais {33444677}, you can get a Jiao of {58} if you abandon 7. pais abandoned by 
-#others {455568889999},  if and only if your rival has {56678 or 56778} you and rival are dead. 
-#what's the rate of one rival has the {56678 or 56778}?  That is {58} + 3 of {6677}?    
+#your pais {33444677}, you can get a Jiao of {58} if you abandon 7. pais abandoned by
+#others {455568889999},  if and only if your rival has {56678 or 56778} you and rival are dead.
+#what's the rate of one rival has the {56678 or 56778}?  That is {58} + 3 of {6677}?
 def PrintRateRivalGetPartOfPais():
     keyRivals = 1
     paiqiang  = 12
@@ -223,7 +221,7 @@ def PrintRateRivalGetPartOfPais():
     print("What's the rate of your rivals has X-Number pais from total AvailabePais?")
     print("KeyRvial={0}, PaiqiangNum={1}, keyRivalPais={2}".format(keyRivals, paiqiang, paisDist.keyRivalPais))
     print("PaisInRival", "AvailabePais", "   Rate")
-    
+
     conditions = [(1, 1), (0, 2), (1, 2), (2, 2), (0, 3), (1, 3), (2, 3), (3, 3), (2, 4), (3, 4), (4, 4)]
     for x,y in conditions:
         paisDist = PaisDistribution(paiqiang, keyRivals, y, x)
@@ -243,7 +241,7 @@ def CalcRateRivalHasSpecificJiao(jiaoList):
             singleJiaoRate *= CalcRateOfAvailablePaisInRivals(paisDist, True, True) * paisDist.keyRival
         rate += singleJiaoRate
     return rate
-    
+
 def PrintRateRivalHasSpecificJiao():
     print("Assume host and one rival need Wan. ")
     print("If 56778 Wan are unknown, what's the relative posibility the rival Hu one spcific Pai?")
@@ -261,7 +259,7 @@ def PrintRateRivalHasSpecificJiao():
         jiaoList.append(curJiao)
     rate = CalcRateRivalHasSpecificJiao(jiaoList)
     print("Rate of Jiao 6 Wan: {0:.2f}".format(rate))
-    
+
     #rate of 56 or 68 or 7 or 77 or 5677 or 6778
     rawJiaoCombs = [[(2,2), (0,3)], [(2,2), (0,3)], [(1,2), (0,4)],
                     [(2,2), (0,3)], [(4,4), (0,1)], [(4,4), (0,1)]]
@@ -274,17 +272,17 @@ def PrintRateRivalHasSpecificJiao():
         jiaoList.append(curJiao)
     rate = CalcRateRivalHasSpecificJiao(jiaoList)
     print("Rate of Jiao 7 Wan: {0:.2f}".format(rate))
-      
+
 print("----")
 PrintRateRivalHasSpecificJiao()
 
 class XiajiaoCondition:
     """
     theWinner:  the rival who Hupai before host Xiajiao.
-    self.hostPais:  the pais number that host maybe get from paiqiang between 
+    self.hostPais:  the pais number that host maybe get from paiqiang between
                     current point and theCheckPoint
     """
-    def __init__(self, thePaiqiang, theAvailablePais, theIndispensablePais, theCheckPoint, theWinner):        
+    def __init__(self, thePaiqiang, theAvailablePais, theIndispensablePais, theCheckPoint, theWinner):
         self.paiqiang = thePaiqiang
         if theAvailablePais >  thePaiqiang:
             self.availablePais = thePaiqiang
@@ -300,17 +298,17 @@ class XiajiaoCondition:
         assert self.indispensablePais <= self.availablePais, "Wrong parameter"
         assert self.indispensablePais <= self.hostPais , "Wrong parameter"
 
-#32 pias(y pais is available) in Paiqiang,  what's the rate host get x pais at the 
+#32 pias(y pais is available) in Paiqiang,  what's the rate host get x pais at the
 #points 4 pais left in Paiqiang
 def CalcRateOfXiajiao1(condition):
-    combTotal = CalcCombNumber(condition.hostPais, condition.paiqiang); 
+    combTotal = CalcCombNumber(condition.hostPais, condition.paiqiang);
     combOk = 0
     loopEnd = min(round(condition.hostPais), condition.availablePais)
     for i in range(condition.indispensablePais, loopEnd + 1):
         if condition.hostPais < i:
             break
         combOk += CalcCombNumber(i, condition.availablePais) * \
-                  CalcCombNumber(condition.hostPais - i, 
+                  CalcCombNumber(condition.hostPais - i,
                                  condition.paiqiang - condition.availablePais)
     rate = combOk / combTotal
     return rate
@@ -335,7 +333,7 @@ def CalcRateOfXiajiao2(condition, isExacltly = False):
         rate = 0
         for i in range(condition.indispensablePais, condition.availablePais + 1):
             condition.indispensablePais = i
-            rate += CalcRateOfXiajiao2(condition, True)            
+            rate += CalcRateOfXiajiao2(condition, True)
     #print("4:", rate)
     return rate
 
@@ -345,7 +343,7 @@ def CalcRateOfXiajiao(condition):
         rate1 = CalcRateOfXiajiao1(condition)
         assert abs(rate1 - rate2) < 0.01,  "bug, rate1={0:.2f}, rate2={1:.2f}.".format(rate1,rate2)
     return rate2
-    
+
 def PrintRateOfXiajiao():
     conditions = [(3, 10), (4, 13), (5, 17)]
     paiqiang = 32
@@ -373,7 +371,7 @@ Dianpao    = 2
 huLostInPoints1 = \
 [
     (2, 30, 0, Zimo), (2, 26, 0, Dianpao), (2, 20, 0, Dianpao), (3, 26, 0, Zimo), (2, 10, 0, Dianpao),       #1-5
-    (2, 21, 0, Dianpao), (2, 12, 0, Zimo), (1, 10, 1, Dianpao), (1, 1, 0, Dianpao), (0, 0, 2, DoNotHupai),   #6-10    
+    (2, 21, 0, Dianpao), (2, 12, 0, Zimo), (1, 10, 1, Dianpao), (1, 1, 0, Dianpao), (0, 0, 2, DoNotHupai),   #6-10
     (0, 0, 2, DoNotHupai), (1, 20, 0, Dianpao), (3, 6, 0, Dianpao), (1, 1, 0, Dianpao), (1, 19, 0, Zimo),    #11-15
     (1, 18, 0, Dianpao), (2, 29, 1, Zimo), (0, 0, 1, DoNotHupai), (0, 0, 0, DoNotHupai), (1, 28, 0, Zimo),   #16-20
     (1, 3, 1, Zimo), (3, 18, 0, Zimo), (1, 37, 3, Dianpao), (1, 7, 1, Zimo), (2, 20, 0, Dianpao),            #21-25
@@ -383,7 +381,7 @@ huLostInPoints1 = \
 huLostInPoints2 = \
 [
     (3, 26, 0, Zimo), (1, 10, 2, Zimo), (3, 26, 1, Zimo), (0, 15, 3, DoNotHupai), (3, 18, 0, Dianpao),        #1-5
-    (1, 5, 0, Zimo), (3, 25, 2, Zimo), (2, 17, 1, Dianpao), (1, 7, 0, Dianpao), (2, 8, 1, Zimo),              #6-10    
+    (1, 5, 0, Zimo), (3, 25, 2, Zimo), (2, 17, 1, Dianpao), (1, 7, 0, Dianpao), (2, 8, 1, Zimo),              #6-10
     (2, 11, 1, Zimo), (0, 0, 1, DoNotHupai), (1, 21, 0, Dianpao), (1, 10, 0, Dianpao), (1, 5, 1, Dianpao),    #11-15
     (3, 21, 0, Dianpao), (1, 5, 1, Zimo), (3, 35, 0, Zimo), (2, 5, 0, Zimo), (0, 8, 2, DoNotHupai),           #16-20
     (3, 31, 0, Dianpao), (1, 2, 2, Zimo), (0, 5, 2, DoNotHupai), (2, 30, 0, Dianpao), (0, 7, 0, DoNotHupai),  #21-25
@@ -394,7 +392,7 @@ huLostInPoints2 = \
 huLostInPoints3 = \
 [
     (3, 35, 3, Dianpao), (3, 7, 0, Zimo), (0, 2, 0, DoNotHupai), (3, 18, 3, Zimo), (0, 0, 1, DoNotHupai),  #1-5
-    (2, 9, 0, Dianpao), (2, 11, 1, Zimo), (1, 7, 2, Dianpao), (3, 15, 3, Zimo), (2, 26, 0, Zimo),              #6-10    
+    (2, 9, 0, Dianpao), (2, 11, 1, Zimo), (1, 7, 2, Dianpao), (3, 15, 3, Zimo), (2, 26, 0, Zimo),              #6-10
     (2, 6, 0, Dianpao), (0, 3, 0, DoNotHupai), (1, 23, 1, Dianpao), (1, 21, 2, Zimo), (3, 42, 0, Zimo),       #11-15
     (2, 0, 0, DoNotHupai), (3, 17, 1, Dianpao), (2, 5, 1, Dianpao), (3, 25, 3, Dianpao), (3, 7, 0, Dianpao),  #16-20
     (1, 20, 0, Dianpao), (0, 0, 3, DoNotHupai), (0, 0, 3, DoNotHupai), (2, 18, 0, Dianpao), (0, 13, 0, DoNotHupai),  #21-25
@@ -412,14 +410,14 @@ def CalcLostOfRivalHupai(begin, end):
     histData = [huLostInPoints1, huLostInPoints2, huLostInPoints3]
     for huLostInPoints in histData:
         rounds += len(huLostInPoints)
-        for leftRivals, paiqiang, fan, type in huLostInPoints:
+        for leftRivals, paiqiang, fan, huType in huLostInPoints:
             if paiqiang < begin or paiqiang >= end:  #[begin, end)
                 continue
-            if type == Zimo:
+            if huType == Zimo:
                 lost += baseRule.GetZimoUnitPrice(fan)
-            if type == Dianpao:
+            if huType == Dianpao:
                 lost += baseRule.GetDianpaoPrice(fan) / leftRivals
-    
+
     lost = lost * 3 / rounds
     return lost
 
@@ -429,9 +427,9 @@ def PrintLostOfRivalHupai():
     index = 1
     histData = [huLostInPoints1, huLostInPoints2, huLostInPoints3]
     for huLostInPoints in histData:
-        for leftRivals, paiqiang, fan, type in huLostInPoints:
-            print("{0:5d}".format(index), 
-                  "{0:9d} {1:8d} {2:3d} {3:s}".format(leftRivals, paiqiang, fan, TypeName[type]))
+        for leftRivals, paiqiang, fan, huType in huLostInPoints:
+            print("{0:5d}".format(index),
+                  "{0:9d} {1:8d} {2:3d} {3:s}".format(leftRivals, paiqiang, fan, TypeName[huType]))
             index += 1
     area = [(0, 4), (4, 8), (8, 12), (12, 16), (16, 20), (20, 24), (24, 28)]
     print("If host didn't Hupai in area [begin, end), how much host will lost?")
@@ -442,7 +440,7 @@ def PrintLostOfRivalHupai():
 print("----")
 PrintLostOfRivalHupai()
 
-    
+
 #### Calculate Zimo rate, if nobody else Hu before you (no Jiao) ... ####
 def PrintPowConst():
     print("Zimo rate, if nobody else Hu before you (no Jiao).")
@@ -454,9 +452,9 @@ def PrintPowConst():
 print("----")
 PrintPowConst()
 
-#### How many Pais you must abandon to get a Jiao 
+#### How many Pais you must abandon to get a Jiao
 #### (start count 1 when you abadon one Pais which you can keep in hand...
-#We get the following data from QQ Majiang. 
+#We get the following data from QQ Majiang.
 paisAbandonedForJiao = [4, 2, 4, 7, 4, 2, 8, 2, 2, 3, 2, 5, 1, 2, 4, 1, 6, 7, 3]
 def PrintPaisAbandonedForJiao():
     pais = 0
@@ -470,11 +468,11 @@ def PrintPaisAbandonedForJiao():
 print("----")
 PrintPaisAbandonedForJiao()
 
-#### The reason the last player could never Hu. We count the percent when the last one   
-#### has no Jiao or his Jiao has been received by others.  Here "last one" means the 
+#### The reason the last player could never Hu. We count the percent when the last one
+#### has no Jiao or his Jiao has been received by others.  Here "last one" means the
 #### player never Hu and the other 2 player has Hu.
-#We get the following data from QQ Majiang. The first field means there still has Pais 
-#the last Player can Hu. The second field means the last player has no Jiao or there is 
+#We get the following data from QQ Majiang. The first field means there still has Pais
+#the last Player can Hu. The second field means the last player has no Jiao or there is
 #no Pai of his Jiao in Paiqiang.
 deadRateWhen3Winer = [(10, 20)] #[(rounds of availablePai != 0, rounds of availablePai == 0)...]
 def GetDeadReason():
@@ -486,22 +484,22 @@ def GetDeadReason():
     rate = countY / (countX+countY)
     return rate
 
-#### Hu time area. When the first, second and third one Hu? Here are some real statistics, the 
-#### first number is the Pais number of Paiqiang when first winner Hu.  And the second number  
-#### is for second winner.  If there is zero,  that means there is no winner Hu, they complete 
-#### this round of game till all Pais in Paiqiang are consumed. for example: {28, 10, 0},  the 
-#### first one Hu when there were 28 Pais in Paiqiang, and the second winner Hu When there were 
+#### Hu time area. When the first, second and third one Hu? Here are some real statistics, the
+#### first number is the Pais number of Paiqiang when first winner Hu.  And the second number
+#### is for second winner.  If there is zero,  that means there is no winner Hu, they complete
+#### this round of game till all Pais in Paiqiang are consumed. for example: {28, 10, 0},  the
+#### first one Hu when there were 28 Pais in Paiqiang, and the second winner Hu When there were
 #### 10 Pais in Paiqiang, While the other player never Hu untill there is no Pais in Paiqiang.
 histHuPoints = [
     # Day 1
-    (28, 17, 9), (24, 0, 0), (36, 5, 0), (4, 3, 0), (28, 15, 14), (14, 6, 4), (27, 13, 0), 
+    (28, 17, 9), (24, 0, 0), (36, 5, 0), (4, 3, 0), (28, 15, 14), (14, 6, 4), (27, 13, 0),
     (29, 9, 0), (16, 14, 10), (29, 28, 27), (14, 0, 0), (24, 16, 16), (20, 15, 14),
     # Day 2
-    (24, 18, 0), (23, 0, 0), (22, 7, 1), (32, 28, 6), (28, 8, 7), (24, 14, 13), (30, 18, 8), 
-    (23, 10, 8), (2, 0, 0), (31, 19, 10), (32, 20, 8), (0, 0, 0), (16, 12, 10), (10, 8, 0), 
+    (24, 18, 0), (23, 0, 0), (22, 7, 1), (32, 28, 6), (28, 8, 7), (24, 14, 13), (30, 18, 8),
+    (23, 10, 8), (2, 0, 0), (31, 19, 10), (32, 20, 8), (0, 0, 0), (16, 12, 10), (10, 8, 0),
     (15, 4, 1), (34, 31, 22), (2, 0, 0), (43, 14, 11), (30, 12, 8), (20, 13, 4),
     # Day 3
-    (15, 13, 12), (13, 1, 0), (21, 1, 0), (17, 12, 11), (33, 3, 0), (21, 15, 3), (17, 1, 0), 
+    (15, 13, 12), (13, 1, 0), (21, 1, 0), (17, 12, 11), (33, 3, 0), (21, 15, 3), (17, 1, 0),
     (19, 17, 4), (23, 5, 0), (6, 2, 0),(7, 0, 0)]
 
 def CalcHuPointsKey(point):
@@ -513,7 +511,7 @@ def PrintHuAreaRawData():
     sortedHistHuPoints.sort(key=CalcHuPointsKey)
     for x, y, z in sortedHistHuPoints:
         print("{0:3d}, {1:3d}, {2:3d}".format(x,y,z))
-    
+
 def PrintAverageTimePoint():
     winner1 = 0
     zero1st = 0
@@ -544,7 +542,7 @@ def PrintAverageTimePoint():
     rateOfNoPaiDead = GetDeadReason()
     rivalRate = (1-rateOfNoPaiDead)/2
     hostRate  = 1 - (1-rateOfNoPaiDead)/2
-    print("    4th column zero: {0:d}, ".format(zero4th), 
+    print("    4th column zero: {0:d}, ".format(zero4th),
           "{0:.2f} of them are No Pai or No Jiao,".format(rateOfNoPaiDead),
           "when 2 player has gone and host has a definitive pai, "
           "rival's Hu rate = {0:.2f}, host's Hu rate = {1:.2f}".format(rivalRate, hostRate))
@@ -553,7 +551,7 @@ def IsBetween(low, high, value):
     if value >= low and value <= high:
         return 1
     return 0
-          
+
 def PrintHuAreaDistribution():
     area0to0   = 0   #2 or more player never Hu.
     area1to4  = 0
@@ -567,7 +565,7 @@ def PrintHuAreaDistribution():
         area0to0 += IsBetween(0, 0, z)
         area1to4 += IsBetween(1, 4, x)
         area1to4 += IsBetween(1, 4, y)
-        area1to4 += IsBetween(1, 4, z)        
+        area1to4 += IsBetween(1, 4, z)
         area1to10 += IsBetween(1, 10, x)
         area1to10 += IsBetween(1, 10, y)
         area1to10 += IsBetween(1, 10, z)
@@ -596,10 +594,10 @@ PrintAverageTimePoint()
 PrintHuAreaDistribution()
 
 #possiblePaiNumber: If one of you Jiao (for example 9 Tong) is in Paiqiang and someone else
-#   receives Tong, the 9 Tong is a Possible-Pai, Possible-Pai-Number is the total number of 
+#   receives Tong, the 9 Tong is a Possible-Pai, Possible-Pai-Number is the total number of
 #   your Possible-Pai. In order to simpfy the calculation,  we assume that the Possible-Pai
 #   never be abandoned by other player who get it from Paiqiang.
-#   
+#
 class Host:
     def __init__(self, theDefinitivePaiNumber, thePossiblePaiNumber, theFanNumber):
         self.definitivePaiNumber = theDefinitivePaiNumber
@@ -611,7 +609,7 @@ class Rival:
         self.definitivePaiNumber = theDefinitivePaiNumber
         self.fanNumber = theFanNumber
 
-#### What's your Pai value?  
+#### What's your Pai value?
 ###  We calculate your Pai's value based on you Definitive-Pai-Number and Fans.
 #### host:  class Host
 #### rivals:  list<class Rival>
@@ -625,7 +623,7 @@ def HostFistZimoRate(host, rivals):
     #get the rate host Hupai by obtain one of possible pai(definitive pai is not included).
     rateHostZimoPossilbe = 0.0
     for i in range(1, round(host.possiblePaiNumber + 1)):
-        rateHostZimoPossilbe += (1 - rateHostZimoPossilbe) / (totalPaiNumber - i) / playerNumber 
+        rateHostZimoPossilbe += (1 - rateHostZimoPossilbe) / (totalPaiNumber - i) / playerNumber
     rate = rateHostZimoPossilbe
     if totalDefinitivePaiNumber != 0:
         rate = host.definitivePaiNumber / totalDefinitivePaiNumber / playerNumber
@@ -637,7 +635,7 @@ def HostFistZimoRate(host, rivals):
 #### rivals:  list<struct {int fanNumber, float paiNumber}>
 def HostFistRcvDianpaoRate(host, rivals):
     playerNumber = len(rivals) + 1
-    totalPaiNumber = host.definitivePaiNumber 
+    totalPaiNumber = host.definitivePaiNumber
     for rival in rivals:
         totalPaiNumber += rival.definitivePaiNumber
     rate = 0.0
@@ -659,7 +657,7 @@ def EstimateHostFirstHupaiValue(host, rivals):
     value = receivePaoIncome * firstRcvDianpaoRate + zimoIncome * firstZimoRate;
     return value;
 
-### Calculate theRival's rate to Zimo Hu, while all other play may Zimo or receive Dianpao.        
+### Calculate theRival's rate to Zimo Hu, while all other play may Zimo or receive Dianpao.
 def RivalFistZimoRate(host, theRival, rivals):
     playerNumber = len(rivals) + 1
     rivalPaiTotal = 0
@@ -670,13 +668,13 @@ def RivalFistZimoRate(host, theRival, rivals):
     #get the rate host Hupai by obtain one of possible pai(definitive pai is not included).
     rateHostZimoPossilbe = 0.0
     for i in range(1, round(host.possiblePaiNumber + 1)):
-        rateHostZimoPossilbe += (1 - rateHostZimoPossilbe) / (totalPaiNumber - i) / playerNumber     
+        rateHostZimoPossilbe += (1 - rateHostZimoPossilbe) / (totalPaiNumber - i) / playerNumber
     rate = 0.0
     if theRival.definitivePaiNumber > 0.01:
         rate = (1-rateHostZimoPossilbe) * theRival.definitivePaiNumber \
                / totalDefinitivePaiNumber / playerNumber
     return rate
-    
+
 def RivalFistRcvDianpaoByHostRate(host, theRival, rivals):
     playerNumber = len(rivals) + 1
     rivalPaiTotal = 0
@@ -712,7 +710,7 @@ def RivalFistRcvDianpaoByAnyoneRate(host, theRival, rivals):
     return rate
 
 def RivalFirstHupaiRate(host, theRival, rivals):
-    rate  = RivalFistZimoRate(host, theRival, rivals) 
+    rate  = RivalFistZimoRate(host, theRival, rivals)
     rate += RivalFistRcvDianpaoByAnyoneRate(host, theRival, rivals)
     return rate
 
@@ -731,14 +729,14 @@ def EstimateHostOneRoundPaiValue(host, rivals):
     rivalsValue = EstimateRivalFistHupaiValue(host, rivals)
     return hostValue - rivalsValue
 
-#### Definitive-Pai-Number:  If one of you Jiao (for example 9 Tong) is in Paiqiang and nobody  
-####       else receive Tong, the 9 Tong is a Definitive-Pai, Definitive-Pai-Number is the 
+#### Definitive-Pai-Number:  If one of you Jiao (for example 9 Tong) is in Paiqiang and nobody
+####       else receive Tong, the 9 Tong is a Definitive-Pai, Definitive-Pai-Number is the
 ####       total number of your Definitive-Pai.
-#### Possible-Pai-Number  :  If one of you Jiao (for example 9 Tong) is in Paiqiang and someone 
-####       else receives Tong, the 9 Tong is a Possible-Pai, Possible-Pai-Number is the 
+#### Possible-Pai-Number  :  If one of you Jiao (for example 9 Tong) is in Paiqiang and someone
+####       else receives Tong, the 9 Tong is a Possible-Pai, Possible-Pai-Number is the
 ####       total number of your Possible-Pai.
-#### Total-Pai-Number     :  Definitive-Pai-Number + Possible-Pai-Number 
-#### Rival-Number         :  How many player except you has not gone (Hu) when we calculate your 
+#### Total-Pai-Number     :  Definitive-Pai-Number + Possible-Pai-Number
+#### Rival-Number         :  How many player except you has not gone (Hu) when we calculate your
 ####       Pai's value.
 def EstimateHostPaiValue(host, rivals):
     baseRule = BaseRule()
@@ -766,7 +764,7 @@ def EstimateHostPaiValue(host, rivals):
         leftRivals = rivals.copy()
         leftRivals.remove(rival)
         nextRoundValue = EstimateHostPaiValue(host, leftRivals) * rateRival
-        value = value - currRoundLoss + nextRoundValue 
+        value = value - currRoundLoss + nextRoundValue
     return value
 
 def CreateRivalList(rivalsData):
@@ -791,16 +789,16 @@ def PaiValueToString(paiNumber, paiValue, betMore):
 
 def GetRivalData(x):
     if x == 0:
-        rivalsInfoGrps =  [[(0.33, 0), (1, 0)], [(0.33, 0), (2, 0)], 
-                           [(0.33, 0), (1, 1)], [(0.33, 0), (2, 1)], 
+        rivalsInfoGrps =  [[(0.33, 0), (1, 0)], [(0.33, 0), (2, 0)],
+                           [(0.33, 0), (1, 1)], [(0.33, 0), (2, 1)],
                            [(0.33, 1), (1, 0)], [(0.33, 1), (2, 0)]]
     else:
-        rivalsInfoGrps = [[(0.33, 0), (1, 0), (1, 0)], [(0.33, 0), (1, 0), (2, 0)], 
-                          [(0.33, 0), (2, 0), (2, 0)], [(0.33, 0), (2, 0), (3, 0)], 
-                          [(0.33, 0), (1, 1), (1, 0)], [(0.33, 0), (1, 1), (2, 0)], 
-                          [(0.33, 0), (2, 1), (2, 0)], [(0.33, 0), (2, 1), (3, 0)], 
-                          [(0.33, 0), (1, 1), (1, 1)], [(0.33, 0), (1, 1), (2, 1)], 
-                          [(0.33, 0), (2, 1), (2, 1)], [(0.33, 0), (2, 1), (3, 1)],] 
+        rivalsInfoGrps = [[(0.33, 0), (1, 0), (1, 0)], [(0.33, 0), (1, 0), (2, 0)],
+                          [(0.33, 0), (2, 0), (2, 0)], [(0.33, 0), (2, 0), (3, 0)],
+                          [(0.33, 0), (1, 1), (1, 0)], [(0.33, 0), (1, 1), (2, 0)],
+                          [(0.33, 0), (2, 1), (2, 0)], [(0.33, 0), (2, 1), (3, 0)],
+                          [(0.33, 0), (1, 1), (1, 1)], [(0.33, 0), (1, 1), (2, 1)],
+                          [(0.33, 0), (2, 1), (2, 1)], [(0.33, 0), (2, 1), (3, 1)],]
     return rivalsInfoGrps
 
 def PrintPaiValue():
@@ -823,7 +821,7 @@ def PrintPaiValue():
                     betMore[fan] = "*"
             prvValue = curValue.copy()
             print(PaiValueToString(pai, curValue, betMore))
-        print("")        
+        print("")
 
 print("----")
 PrintPaiValue()

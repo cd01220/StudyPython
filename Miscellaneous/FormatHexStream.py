@@ -7,9 +7,9 @@ def FormatHexString(string):
     x = "0x" + string[0] + string[1]
     for i in range(2, len(string), 2):
         if ((i % 32) != 0):
-            x = x + ", 0x" + string[i] + string[i+1]            
+            x = x + ", 0x" + string[i] + string[i+1]
         else:
-            x = x + ",\n0x" + string[i] + string[i+1] 
+            x = x + ",\n0x" + string[i] + string[i+1]
     print(x)
     return len(string)
 

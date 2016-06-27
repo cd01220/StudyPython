@@ -1,3 +1,5 @@
+#! /usr/bin/env python3.3
+# -*- coding: GB2312 -*-
 '''
 Created on 2016-5-26
 
@@ -9,8 +11,8 @@ import argparse
 
 def main(argv):
     print(importlib.import_module('__main__').__doc__.split("\n")[1]);
-    
-    parser = argparse.ArgumentParser(description="description", 
+
+    parser = argparse.ArgumentParser(description="description",
                                      formatter_class=argparse.RawDescriptionHelpFormatter,
                                      argument_default=argparse.SUPPRESS)
     parser.add_argument("-r", "--recursive", dest="recurse", action="store_true", help="recurse into subfolders [default: %(default)s]")
@@ -19,13 +21,13 @@ def main(argv):
     parser.add_argument("-e", "--exclude", dest="exclude", help="exclude paths matching this regex pattern. [default: %(default)s]", metavar="RE" )
     parser.add_argument('-V', '--version', action='version', version="1.0")
     parser.add_argument(dest="paths", help="paths to folder(s) with source file(s) [default: %(default)s]", nargs='+')
-    
+
     args = parser.parse_args(argv[1:])
     if "include" in args:
         print(args.include)
     print(args)
-        
-if __name__ == '__main__':   
+
+if __name__ == '__main__':
     sys.argv.append("-v");
     sys.argv.append("-r");
     sys.argv.append("-iabcd");

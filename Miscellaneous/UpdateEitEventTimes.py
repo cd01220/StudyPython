@@ -1,7 +1,7 @@
-import os
-import shutil
+#! /usr/bin/env python3.3
+# -*- coding: GB2312 -*-
+
 import glob
-import time
 
 srcStr="2016-08-"
 dstStr="2017-08-"
@@ -13,4 +13,4 @@ for file in glob.glob("*_eit_*.xml"):
         if srcStr in lines[i]:
             lines[i]=lines[i].replace(srcStr,dstStr)
     open(file, "w").writelines(lines)
-        
+

@@ -1,3 +1,5 @@
+#! /usr/bin/env python3.3
+# -*- coding: GB2312 -*-
 
 import os
 import shutil
