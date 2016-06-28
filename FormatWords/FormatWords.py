@@ -1,3 +1,5 @@
+#! /usr/bin/env python3.3
+# -*- coding: utf-8 -*-
 from html.parser import HTMLParser
 import codecs
 import io

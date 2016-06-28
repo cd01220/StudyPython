@@ -1,5 +1,5 @@
 #! /usr/bin/env python3.3
-# -*- coding: GB2312 -*-
+﻿# -*- coding: utf-8 -*-
 
 import sys
 import random

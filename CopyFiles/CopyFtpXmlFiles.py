@@ -1,7 +1,8 @@
 #! /usr/bin/env python3.3
-# -*- coding: GB2312 -*-
+# -*- coding: utf-8 -*-
 
 import os
+import sys
 import fnmatch
 import glob
 from ftplib import FTP
@@ -9,7 +10,7 @@ from ftplib import FTP
 host = "192.168.3.251"
 path  = "101"
 
-def main():
+def Main(argv):
     for file in glob.glob("10*.xml"):
         os.remove(file);
 
@@ -28,4 +29,4 @@ def main():
     ftp.quit();
 
 if __name__ == '__main__':
-    main();
+    sys.exit(Main(sys.argv));

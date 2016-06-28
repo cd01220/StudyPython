@@ -1,10 +1,8 @@
-import os
-import io
-import sys  
+#! /usr/bin/env python3.3
+# -*- coding: utf-8 -*-
 import codecs
 import unittest
 import FormatWords
-
 
 class TestFormatWords(unittest.TestCase):
     def setUp(self):
@@ -707,7 +705,7 @@ class TestFormatWords(unittest.TestCase):
             """
         left = resultCommence.splitlines()
         parser = FormatWords.MyHtmlParser(self.effecitvePatterns, self.ignoredPatterns, self.cssBlockTags)
-        srcFileObj = codecs.open("./UnitTestFiles/﻿welfare.html", "r", "utf-8")
+        srcFileObj = codecs.open("./UnitTestFiles/welfare.html", "r", "utf-8")
         for line in srcFileObj:
             parser.feed(line)
         right = parser.ReadResult()
