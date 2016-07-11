@@ -4,6 +4,7 @@
 Function:
   Format sting "0001020304050607080910" into "0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x10"
 '''
+import sys
 
 def FormatHexString(string):
     x = "0x" + string[0] + string[1]
@@ -15,4 +16,9 @@ def FormatHexString(string):
     print(x)
     return len(string)
 
-FormatHexString("4af0130001c30101f000f00600010000f000d520e9f6")
+
+def Main(argv):
+    FormatHexString("4af0130001c30101f000f00600010000f000d520e9f6")
+
+if __name__ == '__main__':
+    sys.exit(Main(sys.argv))

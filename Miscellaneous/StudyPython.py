@@ -6,15 +6,12 @@ Created on 2016-5-26
 @author: LiuHao
 '''
 import sys
-import re
+import random
 
 def main(argv):
-    path = "abc;def;hij;lmn;";
-    reg = r'(.*)([^;]?lmn[^;]*)(;)(.*)';
-    rep = r'\1\4'
-    result = re.sub(reg, rep, path).strip(";")
-    
-    print(result)
+    dic = [chr(i) for i in range(33, 127)];
+    random.shuffle(dic)
+    print(dic)
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
