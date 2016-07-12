@@ -1,27 +1,31 @@
 #! /usr/bin/env python3.3
 # -*- coding: utf-8 -*-
 '''
-Created on 2016-06-21
+Created on 2016-07-10
 
 @author: LiuHao
 History:
     ver.1.7, svn version 216: first committing.
     ver.1.7, svn version 211: change to use md5.
+    ver.1.8, svn version 223: in order to support cli cascade, change rawPassword as a optional parameter.
+             refer to CreatePasswordX.cmd for cli cascade.
 '''
 
 import sys
-import importlib
 import argparse
 import hashlib
 
 def Main(argv):
-    print(importlib.import_module('__main__').__doc__.split("\n")[1]);
-
     parser = argparse.ArgumentParser(description="description: create password for specific web.");
-    parser.add_argument(dest="rawPassword", help="raw password string");
+    parser.add_argument("-r", "--raw", dest="rawPassword", action="store",  
+                        help="raw password string", default="");
 
     args = parser.parse_args(argv[1:]);
-    rawPassword = args.rawPassword.strip();
+    if args.rawPassword == "":
+        rawPassword = input("");
+    else:
+        rawPassword = args.rawPassword.strip();
+        
     m = hashlib.md5();
     m.update(rawPassword.encode());
     md5Password = m.hexdigest();

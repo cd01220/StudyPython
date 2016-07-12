@@ -7,12 +7,9 @@ Created on 2016-5-28
 '''
 import os
 import sys
-import importlib
 import argparse
 
 def Main(argv):
-    print(importlib.import_module('__main__').__doc__.split("\n")[1]);
-
     parser = argparse.ArgumentParser(description="description: create password for specific web.");
     parser.add_argument(dest="webName", help="set web name");
 
