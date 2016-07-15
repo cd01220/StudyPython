@@ -35,16 +35,20 @@ def Main(argv):
         path = os.path.join(args.envValue, args.binSubDirectory) + ";" \
              + re.sub(reg, rep, path + ";").strip(";");
         os.environ["PATH"] = path; #for unit test.
- 
+
         #add home/bin into path environment
-        cmd = 'setx /m PATH "' + path + '"';      
-        if not args.isDebug:  
+        cmd = 'setx /m PATH "' + path + '"';
+        if args.isDebug:
+            print(cmd);
+        else:
             os.system(cmd);
 
-    #set home environment.    
+    #set home environment.
     os.environ[args.envName] = args.envValue; #for unit test.
     cmd = 'setx /m ' + args.envName + ' "' + args.envValue + '"';
-    if not args.isDebug:  
+    if args.isDebug:
+        print(cmd);
+    else:
         os.system(cmd);
 
 if __name__ == '__main__':
