@@ -6,6 +6,9 @@ Created on 2016-06-21
 @author: LiuHao
 History:
     ver.1.6, svn version 191->192: change to use regular express to do string operation.
+    ver.2.0, svn version 245->246: add parameter "-a", to add new value to existed evn.
+             example, to add a directory into PATH:
+             C:\\> SetEnvironment.py -a PATH "C:\\Program Files\\Python33\\Scripts"
 '''
 
 import os
@@ -18,6 +21,7 @@ def Main(argv):
     print(importlib.import_module('__main__').__doc__.split("\n")[1]);
 
     parser = argparse.ArgumentParser(description="description: create password for specific web.");
+    parser.add_argument("-a", "--append", dest="isAppend", action="store_true", help="is append");
     parser.add_argument("-b", "--bin", dest="binSubDirectory", action="store", help="bin sub-directory", default="");
     parser.add_argument("-d", "--debug", dest="isDebug", action="store_true", help="is debug");
     parser.add_argument(dest="envName", help="set environment name");
@@ -43,9 +47,21 @@ def Main(argv):
         else:
             os.system(cmd);
 
+    #calculate new envName.
+    if args.isAppend:
+        if args.envName in os.environ:
+            oldValue = os.environ[args.envName].strip(";");
+            if args.envValue + ";" in oldValue + ";":
+                envValue = oldValue;
+            else:
+                envValue = args.envValue + ";" + oldValue;
+        else:
+            envValue = args.envValue;
+    else:
+        envValue = args.envValue;
     #set home environment.
-    os.environ[args.envName] = args.envValue; #for unit test.
-    cmd = 'setx /m ' + args.envName + ' "' + args.envValue + '"';
+    os.environ[args.envName] = envValue; #for unit test.
+    cmd = 'setx /m ' + args.envName + ' "' + envValue + '"';
     if args.isDebug:
         print(cmd);
     else:
