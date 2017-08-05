@@ -12,12 +12,12 @@ import sys
 
 def Main(argv):
     ignoreFolders = ["*.svn", ".git", ".metadata", ".settings",
-                     ".svn", "Debug", "__pycache__", "build"];
-    ignoreFiles = ["*-odb.cxx", "*-odb.hxx", "*-odb.ixx", "*-odb.sql", "*.a", "*.al", "*.aps", "*.bz2",
+                     ".svn", "Debug", "__pycache__", "build", "ipch"];
+    ignoreFiles = ["*-odb.cpp", "*-odb.cxx", "*-odb.h", "*-odb.hxx", "*-odb.ixx", "*-odb.sql", "*.a", "*.al", "*.aps", "*.bz2",
                    "*.git", "*.gz", "*.ilk", "*.la", "*.ldb", "*.lo", "*.o", "*.obj",
-                   "*.opensdf", "*.pdb", "*.pyc", "*.pyo", "*.rej", "*.res", "*.sdf",
+                   "*.opensdf", "*.pch", "*.pdb", "*.pyc", "*.pyo", "*.rej", "*.res", "*.sdf",
                    "*.so.[0-9]*", "*.suo", "*.svn", "*.tlog", "*.user", "*.vcxproj.user",
-                   "*.zip", ".DS_Store", ".libs", ".project", ".pydevproject", "desktop.ini",
+                   "*.zip", "*_i.c", "*_i.h", ".DS_Store", ".libs", ".project", ".pydevproject", "desktop.ini",
                    "~*.doc", "~*.docx"
                    ];
 
