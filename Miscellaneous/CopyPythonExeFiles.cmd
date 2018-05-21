@@ -1,0 +1,1 @@
+copy /Y .\dist\SetEnvVariableSubstring.exe ..\Dist\SetEnvVariableSubstring.exe
