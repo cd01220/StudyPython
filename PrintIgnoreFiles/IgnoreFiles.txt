@@ -1,5 +1,5 @@
-Folders (for Beyond Compare)
-.svn
+Folders (for Beyond Compare):
+*.svn
 .git
 .metadata
 .settings
@@ -7,51 +7,53 @@ Folders (for Beyond Compare)
 Debug
 __pycache__
 build
+dist
 ipch
 
-Files (for Beyond Compare)  
--odb.cpp
--odb.cxx
--odb.h
--odb.hxx
--odb.ixx
--odb.sql
-.a
-.al
-.aps
-.bz2
-.git
-.gz
-.ilk
-.la
-.ldb
-.lo
-.o
-.obj
-.opensdf
-.pch
-.pdb
-.pyc
-.pyo
-.rej
-.res
-.sdf
-.so.[0-9]
-.suo
-.svn
-.tlog
-.user
-.vcxproj.user
-.zip
-_i.c
-_i.h
+Files (for Beyond Compare)  :
+*-odb.cpp
+*-odb.cxx
+*-odb.h
+*-odb.hxx
+*-odb.ixx
+*-odb.sql
+*.a
+*.al
+*.aps
+*.bz2
+*.git
+*.gz
+*.ilk
+*.la
+*.ldb
+*.lo
+*.o
+*.obj
+*.opensdf
+*.pch
+*.pdb
+*.pyc
+*.pyo
+*.rej
+*.res
+*.sdf
+*.so.[0-9]*
+*.spec
+*.suo
+*.svn
+*.tlog
+*.user
+*.vcxproj.user
+*.zip
+*_i.c
+*_i.h
 .DS_Store
 .libs
 .project
 .pydevproject
 desktop.ini
-~.doc
-~.docx
+~*.doc
+~*.docx
 
-Folders + Files (for Svn) 
-.svn .git .metadata .settings .svn Debug __pycache__ build ipch -odb.cpp -odb.cxx -odb.h -odb.hxx -odb.ixx -odb.sql .a .al .aps .bz2 .git .gz .ilk .la .ldb .lo .o .obj .opensdf .pch .pdb .pyc .pyo .rej .res .sdf .so.[0-9] .suo .svn .tlog .user .vcxproj.user .zip _i.c _i.h .DS_Store .libs .project .pydevproject desktop.ini ~.doc ~.docx 
+Folders + Files (for Svn): 
+*.svn .git .metadata .settings .svn Debug __pycache__ build dist ipch *-odb.cpp *-odb.cxx *-odb.h *-odb.hxx *-odb.ixx *-odb.sql *.a *.al *.aps *.bz2 *.git *.gz *.ilk *.la *.ldb *.lo *.o *.obj *.opensdf *.pch *.pdb *.pyc *.pyo *.rej *.res *.sdf *.so.[0-9]* *.spec *.suo *.svn *.tlog *.user *.vcxproj.user *.zip *_i.c *_i.h .DS_Store .libs .project .pydevproject desktop.ini ~*.doc ~*.docx 
