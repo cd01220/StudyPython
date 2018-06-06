@@ -12,7 +12,7 @@ import sys
 
 def Main(argv):
     ignoreFolders = ["*.svn", ".git", ".metadata", ".settings",
-                     ".svn", "Debug", "__pycache__", "build", "dist","ipch"];
+                     ".svn", ".vs", "Debug", "__pycache__", "build", "dist","ipch", "packages"];
     ignoreFiles = ["*-odb.cpp", "*-odb.cxx", "*-odb.h", "*-odb.hxx", "*-odb.ixx", "*-odb.sql", "*.a", "*.al", "*.aps", "*.bz2",
                    "*.git", "*.gz", "*.ilk", "*.la", "*.ldb", "*.lo", "*.o", "*.obj",
                    "*.opensdf", "*.pch", "*.pdb", "*.pyc", "*.pyo", "*.rej", "*.res", "*.sdf",
