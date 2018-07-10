@@ -11,8 +11,8 @@ History:
 import sys
 
 def Main(argv):
-    ignoreFolders = ["*.svn", ".git", ".metadata", ".settings",
-                     ".svn", ".vs", "Debug", "__pycache__", "build", "dist","ipch", "packages"];
+    ignoreFolders = [".git/", ".metadata/", ".settings/",
+                     ".svn/", ".vs/", "Debug/", "__pycache__/", "build/", "dist/","ipch/", "packages/"];
     ignoreFiles = ["*-odb.cpp", "*-odb.cxx", "*-odb.h", "*-odb.hxx", "*-odb.ixx", "*-odb.sql", "*.a", "*.al", "*.aps", "*.bz2",
                    "*.git", "*.gz", "*.ilk", "*.la", "*.ldb", "*.lo", "*.o", "*.obj",
                    "*.opensdf", "*.pch", "*.pdb", "*.pyc", "*.pyo", "*.rej", "*.res", "*.sdf",
@@ -24,17 +24,17 @@ def Main(argv):
     ignoreFolders.sort();
     ignoreFiles.sort();
 
-    print("Folders (for Beyond Compare):");
+    print("#Folders (for Beyond Compare):");
     for i in ignoreFolders:
         print(i);
 
     print();
-    print("Files (for Beyond Compare)  :");
+    print("#Files (for Beyond Compare)  :");
     for i in ignoreFiles:
         print(i);
 
     print();
-    print("Folders + Files (for Svn): ");
+    print("#Folders + Files (for Svn): ");
 
     for i in ignoreFolders + ignoreFiles:
         print(i, end=" ");
