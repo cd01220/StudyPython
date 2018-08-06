@@ -28,8 +28,9 @@ class BaseRule:
         return self.baseWage * (2.0 ** fan)
     def GetZimoUnitPrice(self, fan):
         assert fan >= 0 and fan <= 4, "Wrong parameter."
-        return self.baseWage * (2.0 ** fan) + self.baseWage
-        #return self.baseWage * (2.0 ** (fan + 1))
+        fan = fan + 1 if fan < 4 else fan
+        return self.baseWage * (2.0 ** fan)
+        #return self.baseWage * (2.0 ** fan) + self.baseWage
     def GetZimoIncome(self, rivalsNum, fan):
         return self.GetZimoUnitPrice(fan) * rivalsNum
     def GetWanGangIncome(self, rivalsNum):
@@ -422,7 +423,7 @@ def CalcLostOfRivalHupai(begin, end):
 
 def PrintLostOfRivalHupai():
     TypeName = ["NotHupai", "Zimo", "Dianpao"]
-    print("Index LeftRival Paiqiang Fan Type(0N, 1Z, 2D)")
+    print("Index LeftRival Paiqiang Fan Type")
     index = 1
     histData = [huLostInPoints1, huLostInPoints2, huLostInPoints3]
     for huLostInPoints in histData:
