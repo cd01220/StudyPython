@@ -40,4 +40,4 @@ def Main(argv):
         print(i, end=" ");
 
 if __name__ == '__main__':
-    sys.exit(Main(sys.argv));
+    Main(sys.argv);

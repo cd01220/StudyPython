@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{d6168624-c816-4212-bddb-b8b0923410a0}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>PrintIgnoreFiles\PrintIgnoreFiles.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="FormatWords\Bug History.txt" />
+    <Content Include="FormatWords\Documents.FormatWords\source - bead - anylasis.html" />
+    <Content Include="FormatWords\Documents.FormatWords\source - blazon - anylasis.html" />
+    <Content Include="FormatWords\Documents.FormatWords\source - commence - anylasis.html" />
+    <Content Include="FormatWords\Documents.FormatWords\source - fling - anylasis.html" />
+    <Content Include="FormatWords\Documents.FormatWords\source - look - anylasis.html" />
+    <Content Include="FormatWords\Documents.FormatWords\source - welfare - anylasis.html" />
+    <Content Include="FormatWords\UnitTestFiles\bead.html" />
+    <Content Include="FormatWords\UnitTestFiles\blazon.html" />
+    <Content Include="FormatWords\UnitTestFiles\commence.html" />
+    <Content Include="FormatWords\UnitTestFiles\competent.html" />
+    <Content Include="FormatWords\UnitTestFiles\ideology.html" />
+    <Content Include="FormatWords\UnitTestFiles\look.html" />
+    <Content Include="FormatWords\UnitTestFiles\welfare.html" />
+    <Content Include="Miscellaneous\build\SetEnvVariableSubstring\warnSetEnvVariableSubstring.txt" />
+    <Content Include="Miscellaneous\build\SetEnvVariableSubstring\xref-SetEnvVariableSubstring.html" />
+    <Content Include="Mj\MjStatistic.txt" />
+    <Content Include="PrintIgnoreFiles\IgnoreFiles.txt" />
+    <Content Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CopyFiles\BackupByIterateFolder.py" />
+    <Compile Include="CopyFiles\CopyCipherFile.py" />
+    <Compile Include="CopyFiles\CopyCipherFileUnitTest.py" />
+    <Compile Include="CopyFiles\CopyFtpXmlFiles.py" />
+    <Compile Include="CopyFiles\DeleteUnversionedFiles.py" />
+    <Compile Include="CopyFiles\ExportVcProjectToGit.py" />
+    <Compile Include="FormatWords\FormatWords.py" />
+    <Compile Include="FormatWords\FormatWordsUnitTest.py" />
+    <Compile Include="Miscellaneous\FormatHexStream.py" />
+    <Compile Include="Miscellaneous\SetEnvVariableSubstring.py" />
+    <Compile Include="Miscellaneous\StudyPython.py" />
+    <Compile Include="Mj\mj.py" />
+    <Compile Include="Mj\MjRandomPai.py" />
+    <Compile Include="PrintIgnoreFiles\PrintIgnoreFiles.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CopyFiles" />
+    <Folder Include="FormatWords" />
+    <Folder Include="FormatWords\Documents.FormatWords" />
+    <Folder Include="FormatWords\UnitTestFiles" />
+    <Folder Include="Miscellaneous" />
+    <Folder Include="Miscellaneous\build\" />
+    <Folder Include="Miscellaneous\build\SetEnvVariableSubstring" />
+    <Folder Include="Mj" />
+    <Folder Include="PrintIgnoreFiles" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>
