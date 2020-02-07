@@ -1,4 +1,4 @@
-#! /usr/bin/env python3.5
+#! /usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 '''
 Created on 2016-6-14
@@ -12,7 +12,7 @@ import sys
 
 def Main(argv):
     ignoreFolders = [".git/", ".metadata/", ".settings/",
-                     ".svn/", ".vs/", "Debug/", "__pycache__/", "build/", "dist/","ipch/", "packages/"];
+                     ".svn/", ".vs/", "Debug/", "__pycache__/", "bin/", "build/", "dist/","ipch/", "obj/", "packages/"];
     ignoreFiles = ["*-odb.cpp", "*-odb.cxx", "*-odb.h", "*-odb.hxx", "*-odb.ixx", "*-odb.sql", "*.a", "*.al", "*.aps", "*.bz2",
                    "*.git", "*.gz", "*.ilk", "*.la", "*.ldb", "*.lo", "*.o", "*.obj",
                    "*.opensdf", "*.pch", "*.pdb", "*.pyc", "*.pyo", "*.rej", "*.res", "*.sdf",
